@@ -1,4 +1,5 @@
 using dsKnowledgeTest.Data;
+using dsKnowledgeTest.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
+
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 

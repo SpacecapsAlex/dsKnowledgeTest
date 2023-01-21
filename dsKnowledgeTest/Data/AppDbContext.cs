@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using dsKnowledgeTest.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace dsKnowledgeTest.Data;
 
@@ -8,4 +9,6 @@ public class AppDbContext : DbContext
     {
         Database.EnsureCreated();
     }
+
+    public DbSet<Category> Categories { get; set; }
 }
