@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
-using dsKnowledgeTest.Constans;
+using dsKnowledgeTest.Constants;
 using dsKnowledgeTest.Data;
 using dsKnowledgeTest.Models;
 using dsKnowledgeTest.ViewModels.UserViewModels;

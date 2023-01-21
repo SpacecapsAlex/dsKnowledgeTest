@@ -1,4 +1,4 @@
-﻿namespace dsKnowledgeTest.Constans
+﻿namespace dsKnowledgeTest.Constants
 {
     public enum RolesConst
     {
