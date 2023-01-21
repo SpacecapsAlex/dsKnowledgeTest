@@ -7,5 +7,9 @@ public class Category
     public string? Description { get; set; }
     public string? ImageUrl { get; set; }
     public int? CntTest { get; set; }
-    public List<Test> Tests { get; set; }
+
+    public DateTime CreatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    
+    public List<Test>? Tests { get; set; }
 }
