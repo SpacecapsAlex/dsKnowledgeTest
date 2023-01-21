@@ -7,8 +7,5 @@ namespace dsKnowledgeTest.Controllers;
 public class UserController : ControllerBase
 {
     // GET
-    public string Index()
-    {
-        return "UserIndex";
-    }
+    
 }

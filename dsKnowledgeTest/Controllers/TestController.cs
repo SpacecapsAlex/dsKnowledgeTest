@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using dsKnowledgeTest.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace dsKnowledgeTest.Controllers;
 
@@ -6,9 +7,18 @@ namespace dsKnowledgeTest.Controllers;
 [Route("[controller]")]
 public class TestController : ControllerBase
 {
-    // GET
-    public string Index()
+    private readonly ITestService _testService;
+
+    public TestController(ITestService testService)
     {
-        return "TestIndex";
+        _testService = testService;
+    }
+
+    [HttpGet]
+    public async Task<ObjectResult> Get()
+    {
+        var tests = await _testService.GetAllTestsAsync();
+        return Ok(tests);
+
     }
 }

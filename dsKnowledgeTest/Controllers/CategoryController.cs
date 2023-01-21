@@ -7,8 +7,5 @@ namespace dsKnowledgeTest.Controllers;
 public class CategoryController : ControllerBase
 {
     // GET
-    public string Index()
-    {
-        return "CategoryIndex";
-    }
+    
 }

@@ -27,6 +27,9 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
 
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ITestService, TestService>();
+builder.Services.AddTransient<IAccountService, AccountService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
 
@@ -48,6 +51,10 @@ app.UseCors(build => build.AllowAnyOrigin()
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.MapControllers();
 
