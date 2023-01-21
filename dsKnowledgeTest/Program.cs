@@ -1,9 +1,21 @@
 using dsKnowledgeTest.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = new PathString("/Account/Login");
+        options.AccessDeniedPath = new PathString("/Account/Login");
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigin", build => build.AllowAnyOrigin());
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,6 +35,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors(build => build.AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
