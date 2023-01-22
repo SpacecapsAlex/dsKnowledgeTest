@@ -14,4 +14,5 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Test> Tests { get; set; }
+    public DbSet<Faq> Faq { get; set; }
 }
