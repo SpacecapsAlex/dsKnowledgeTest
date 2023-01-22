@@ -31,6 +31,7 @@ builder.Services.AddTransient<ITestService, TestService>();
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IFaqService, FaqService>();
+builder.Services.AddTransient<IFeedbackService, FeedbackService>();
 
 var app = builder.Build();
 

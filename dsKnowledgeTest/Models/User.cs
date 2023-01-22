@@ -1,5 +1,9 @@
-﻿namespace dsKnowledgeTest.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace dsKnowledgeTest.Models
 {
+    [Index("Email", IsUnique = true)]
+    [Index("Login", IsUnique = true)]
     public class User
     {
         public Guid Id { get; set; }
@@ -21,5 +25,6 @@
 
         public Guid RoleId { get; set; }
         public Role Role { get; set; }
+        public ICollection<Feedback> Feedbacks { get; set; }
     }
 }
