@@ -14,11 +14,12 @@ public class TestController : ControllerBase
         _testService = testService;
     }
 
+    [Route("GetAllByCategory")]
     [HttpGet]
-    public async Task<ObjectResult> Get()
+    public async Task<ObjectResult> GetAllByCategory(string categoryId)
     {
-        var tests = await _testService.GetAllTestsAsync();
+        var categoryGuid = Guid.Parse(categoryId);
+        var tests = await _testService.GetAllTestByCategoryAsync(categoryGuid);
         return Ok(tests);
-
     }
 }
