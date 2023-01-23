@@ -19,5 +19,6 @@ public class QuestionService : IQuestionService
     }
 
     public async Task<List<Question>> GetAllQuestionForTestAsync(Guid testId) =>
-        await _db.Questions.Where(questionItem => questionItem.TestId == testId).ToListAsync();
+        await _db.Questions
+            .Where(questionItem => questionItem.TestId == testId).ToListAsync();
 }
