@@ -11,12 +11,15 @@ namespace dsKnowledgeTest.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
+        public const string DEFAULT_PASSWORD = "12345678";
 
         private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IEmailService emailService)
         {
             _accountService = accountService;
+            _emailService = emailService;
         }
         [Route("Login")]
         [HttpPost]
@@ -53,9 +56,8 @@ namespace dsKnowledgeTest.Controllers
         {
             var user = await _accountService.Register(registerUser);
             if (user == null) return BadRequest(user);
-            await Authenticate(user);
+            await _emailService.SendEmailAsync(user.Email, "Пароль для входа", DEFAULT_PASSWORD);
             return Ok(user);
-
         }
         private async Task Authenticate(UserViewModel user)
         {

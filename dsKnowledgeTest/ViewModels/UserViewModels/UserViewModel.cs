@@ -14,6 +14,7 @@
         public string? PhoneNumber { get; set; }
         public string? Login { get; set; }
         public string Password { get; set; }
+        public string? IconUrl { get; set; }
         public string DataCreated { get; set; }
         public string DataUpdated { get; set; }
         public bool IsActivated { get; set; }

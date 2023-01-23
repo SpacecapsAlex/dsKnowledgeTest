@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using dsKnowledgeTest.Constants;
+using Microsoft.EntityFrameworkCore;
 
 namespace dsKnowledgeTest.Models
 {
@@ -18,13 +19,12 @@ namespace dsKnowledgeTest.Models
         public string? PhoneNumber { get; set; }
         public string? Login { get; set; }
         public string Password { get; set; }
+        public string? IconUrl { get; set; }
         public DateTime DataCreated { get; set; }
         public DateTime DataUpdated { get; set; }
         public bool IsActivated { get; set; }
         public bool IsDeleted { get; set; }
+        public RolesConst Role { get; set; }
 
-        public Guid RoleId { get; set; }
-        public Role Role { get; set; }
-        public ICollection<Feedback> Feedbacks { get; set; }
     }
 }

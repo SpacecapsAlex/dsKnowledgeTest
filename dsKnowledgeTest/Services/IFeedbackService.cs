@@ -27,10 +27,9 @@ namespace dsKnowledgeTest.Services
                     FirstName = model.FirstName,
                     SurName = model.SurName,
                     Email = model.Email,
+                    Subject = model.Subject,
                     Description = model.Description,
                     CreateData = DateTime.Now,
-                    UserId = model.UserId,
-                    FeedbackCategoryName = model.FeedbackCategoryName,
                 });
                 await _db.SaveChangesAsync();
                 return model;

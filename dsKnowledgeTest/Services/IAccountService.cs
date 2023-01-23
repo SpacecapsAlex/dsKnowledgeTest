@@ -20,6 +20,7 @@ namespace dsKnowledgeTest.Services
         public const int LOGIN_MIN_LENGHT = 6;
         public const int PASSWORD_MIN_LENGHT = 6;
         public const int EMAIL_MIN_LENGHT = 6;
+        public const string DEFAULT_PASSWORD = "12345678";
 
         private readonly AppDbContext _db;
 
@@ -33,7 +34,6 @@ namespace dsKnowledgeTest.Services
             try
             {
                 var user = await _db.Users.AsNoTracking()
-                    .Include("Role")
                     .Select(u => new UserViewModel
                     {
                         Id = u.Id,
@@ -47,12 +47,13 @@ namespace dsKnowledgeTest.Services
                         FirstName = u.FirstName,
                         SurName = u.SurName,
                         LastName = u.LastName,
+                        IconUrl = u.IconUrl,
                         Institution = u.Institution,
                         Specialization = u.Specialization,
                         CourseNumber = u.CourseNumber,
                         Group = u.Group,
                         PhoneNumber = u.PhoneNumber,
-                        RoleName = u.Role.Name,
+                        RoleName = u.Role.ToString(),
                     }).FirstOrDefaultAsync(u =>
                         u.Email == loginUser.Email && u.Password == HaspPassword(loginUser.Password));
                 return user?.IsActivated == true
@@ -69,17 +70,15 @@ namespace dsKnowledgeTest.Services
         {
             try
             {
-                if (registerUser.Password.Length < PASSWORD_MIN_LENGHT ||
-                    registerUser.Email.Length < EMAIL_MIN_LENGHT) return null;
+                if (registerUser.Email.Length < EMAIL_MIN_LENGHT) return null;
 
                 await _db.Users.AddAsync(new User
                 {
                     Email = registerUser.Email,
-                    Password = HaspPassword(registerUser.Password),
+                    Password = HaspPassword(DEFAULT_PASSWORD),
                     DataCreated = DateTime.Now,
                     DataUpdated = DateTime.Now,
-                    RoleId = (await _db.Roles.AsNoTracking()
-                        .FirstAsync(r => r.Name == RolesConst.User.ToString())).Id,
+                    Role = RolesConst.User,
                     IsActivated = true,
                     IsDeleted = false,
                     
@@ -87,7 +86,6 @@ namespace dsKnowledgeTest.Services
                 await _db.SaveChangesAsync();
 
                 return await _db.Users.AsNoTracking()
-                    .Include("Role")
                     .Select(u => new UserViewModel
                     {
                         Id = u.Id,
@@ -101,12 +99,13 @@ namespace dsKnowledgeTest.Services
                         FirstName = u.FirstName,
                         SurName = u.SurName,
                         LastName = u.LastName,
+                        IconUrl = u.IconUrl,
                         Institution = u.Institution,
                         Specialization = u.Specialization,
                         CourseNumber = u.CourseNumber,
                         Group = u.Group,
                         PhoneNumber = u.PhoneNumber,
-                        RoleName = u.Role.Name,
+                        RoleName = u.Role.ToString(),
                     })
                     .FirstOrDefaultAsync(u => u.Email == registerUser.Email);
             }
