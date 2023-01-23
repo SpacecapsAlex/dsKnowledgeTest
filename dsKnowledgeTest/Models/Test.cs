@@ -18,4 +18,6 @@ public class Test
 
     public Guid CategoryId { get; set; }
     public Category Category { get; set; }
+
+    public List<Question> Questions { get; set; }
 }
