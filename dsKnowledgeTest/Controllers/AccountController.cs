@@ -1,9 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using dsKnowledgeTest.Services;
 using dsKnowledgeTest.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace dsKnowledgeTest.Controllers
 {
@@ -27,27 +29,26 @@ namespace dsKnowledgeTest.Controllers
         {
             var user = await _accountService.Login(loginUser);
             if (user == null) return BadRequest(user);
-            await Authenticate(user);
-            return Ok(user);
+            var token = await Authenticate(user);
+            //Response.Headers.Add("Bearer", token);
+            return Ok(token);
+
+            //return Ok(user);
 
         }
 
-        [Route("Logout")]
+        /*[Route("Logout")]
         [HttpGet]
         public async Task<ObjectResult> Logout()
         {
-            var logoutUserName = await LogoutUser();
-            if (logoutUserName == null) return BadRequest(logoutUserName);
-            return Ok(logoutUserName);
-        }
+
+        }/*
 
         /*[Route("IsAuthenticated")]
         [HttpGet]
         public async Task<ObjectResult> IsAuthenticated()
         {
-            var userEmail = AuthenticatedUserName();
-            if (userEmail == null) return BadRequest(userEmail);
-            return Ok(await _userService.GetByEmailAsync(userEmail));
+            
         }*/
 
         [Route("Register")]
@@ -59,7 +60,7 @@ namespace dsKnowledgeTest.Controllers
             await _emailService.SendEmailAsync(user.Email, "Пароль для входа", DEFAULT_PASSWORD);
             return Ok(user);
         }
-        private async Task Authenticate(UserViewModel user)
+        private async Task<string> Authenticate(UserViewModel user)
         {
             var claims = new List<Claim>
             {
@@ -67,26 +68,14 @@ namespace dsKnowledgeTest.Controllers
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.RoleName)
             };
 
-            var id = new ClaimsIdentity(
-                claims,
-                "ApplicationCookie",
-                ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(id));
-        }
-
-        private async Task<string?> LogoutUser()
-        {
-            var logoutUser = HttpContext.User.Identity;
-
-            if (logoutUser is not { IsAuthenticated: true }) return null;
-
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return logoutUser.Name;
-
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
         private string? AuthenticatedUserName()

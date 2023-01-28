@@ -1,4 +1,7 @@
-﻿using dsKnowledgeTest.Services;
+﻿using System.Net.Http.Headers;
+using dsKnowledgeTest.Constants;
+using dsKnowledgeTest.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dsKnowledgeTest.Controllers;
@@ -14,6 +17,8 @@ public class CategoryController : ControllerBase
         _categoryService = categoryService;
     }
 
+    [Authorize(Roles = nameof(RolesConst.User))]
+    //[Authorize]
     [Route("GetAll")]
     [HttpGet]
     public async Task<ObjectResult> GetAll()
