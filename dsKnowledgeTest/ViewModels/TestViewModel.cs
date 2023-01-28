@@ -10,7 +10,8 @@ public class TestViewModel
     public string? ImageUrl { get; set; }
     public TestLevel? TestLevel { get; set; }
     public bool? IsTestOnTime { get; set; }
-    public TimeSpan? TimeForTest { get; set; }
+    public int? TimeForTest { get; set; }
+    public int? Score { get; set; }
     public int? CntQuestion { get; set; }
     public Guid CategoryId { get; set; }
 }

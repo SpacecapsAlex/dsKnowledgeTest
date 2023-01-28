@@ -1,5 +1,6 @@
 using System.Text;
 using dsKnowledgeTest.Data;
+using dsKnowledgeTest.Models;
 using dsKnowledgeTest.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,12 +34,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-/*builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = new PathString("/Account/Login");
-        options.AccessDeniedPath = new PathString("/Account/Login");
-    });*/
 
 builder.Services.AddCors(options =>
 {
@@ -60,6 +55,7 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IFaqService, FaqService>();
 builder.Services.AddTransient<IFeedbackService, FeedbackService>();
 builder.Services.AddTransient<IQuestionService, QuestionService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 

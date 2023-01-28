@@ -39,21 +39,15 @@ namespace dsKnowledgeTest.Services
                         Id = u.Id,
                         Email = u.Email,
                         Login = u.Login,
-                        Password = u.Password,
-                        DataCreated = u.DataCreated.ToString(CultureInfo.InvariantCulture),
-                        DataUpdated = u.DataUpdated.ToString(CultureInfo.InvariantCulture),
-                        IsActivated = u.IsActivated,
-                        IsDeleted = u.IsDeleted,
                         FirstName = u.FirstName,
                         SurName = u.SurName,
                         LastName = u.LastName,
                         IconUrl = u.IconUrl,
-                        Institution = u.Institution,
+                        Organization = u.Organization,
                         Specialization = u.Specialization,
-                        CourseNumber = u.CourseNumber,
-                        Group = u.Group,
                         PhoneNumber = u.PhoneNumber,
                         RoleName = u.Role.ToString(),
+                        Token = ""
                     }).FirstOrDefaultAsync(u =>
                         u.Email == loginUser.Email && u.Password == HaspPassword(loginUser.Password));
                 return user?.IsActivated == true
@@ -92,20 +86,16 @@ namespace dsKnowledgeTest.Services
                         Email = u.Email,
                         Login = u.Login,
                         Password = u.Password,
-                        DataCreated = u.DataCreated.ToString(CultureInfo.InvariantCulture),
-                        DataUpdated = u.DataUpdated.ToString(CultureInfo.InvariantCulture),
                         IsActivated = u.IsActivated,
-                        IsDeleted = u.IsDeleted,
                         FirstName = u.FirstName,
                         SurName = u.SurName,
                         LastName = u.LastName,
                         IconUrl = u.IconUrl,
-                        Institution = u.Institution,
+                        Organization = u.Organization,
                         Specialization = u.Specialization,
-                        CourseNumber = u.CourseNumber,
-                        Group = u.Group,
                         PhoneNumber = u.PhoneNumber,
                         RoleName = u.Role.ToString(),
+                        Token = ""
                     })
                     .FirstOrDefaultAsync(u => u.Email == registerUser.Email);
             }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dsKnowledgeTest.Data;
 
@@ -11,9 +12,10 @@ using dsKnowledgeTest.Data;
 namespace dsKnowledgeTest.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230128192056_edit_models")]
+    partial class edit_models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,7 +191,7 @@ namespace dsKnowledgeTest.Migrations
                     b.Property<int?>("TestLevel")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TimeForTest")
+                    b.Property<int?>("TimeTest")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")

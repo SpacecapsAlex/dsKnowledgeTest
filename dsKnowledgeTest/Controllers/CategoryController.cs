@@ -17,8 +17,6 @@ public class CategoryController : ControllerBase
         _categoryService = categoryService;
     }
 
-    [Authorize(Roles = nameof(RolesConst.User))]
-    //[Authorize]
     [Route("GetAll")]
     [HttpGet]
     public async Task<ObjectResult> GetAll()
