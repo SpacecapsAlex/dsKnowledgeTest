@@ -36,9 +36,10 @@ namespace dsKnowledgeTest.Services
                 var user = await _db.Users.AsNoTracking()
                     .Select(u => new UserViewModel
                     {
-                        Id = u.Id,
+                        Id = u.Id.ToString(),
                         Email = u.Email,
                         Login = u.Login,
+                        Password = u.Password,
                         FirstName = u.FirstName,
                         SurName = u.SurName,
                         LastName = u.LastName,
@@ -47,6 +48,7 @@ namespace dsKnowledgeTest.Services
                         Specialization = u.Specialization,
                         PhoneNumber = u.PhoneNumber,
                         RoleName = u.Role.ToString(),
+                        IsActivated = u.IsActivated,
                         Token = ""
                     }).FirstOrDefaultAsync(u =>
                         u.Email == loginUser.Email && u.Password == HaspPassword(loginUser.Password));
@@ -82,7 +84,7 @@ namespace dsKnowledgeTest.Services
                 return await _db.Users.AsNoTracking()
                     .Select(u => new UserViewModel
                     {
-                        Id = u.Id,
+                        Id = u.Id.ToString(),
                         Email = u.Email,
                         Login = u.Login,
                         Password = u.Password,

@@ -2,7 +2,7 @@
 {
     public class UpdateUserViewModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string? FirstName { get; set; }
         public string? SurName { get; set; }
         public string? LastName { get; set; }

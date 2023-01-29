@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using dsKnowledgeTest.Constants;
 using dsKnowledgeTest.Services;
 using dsKnowledgeTest.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,13 @@ namespace dsKnowledgeTest.Controllers
             _accountService = accountService;
             _emailService = emailService;
         }
+
         [Route("Login")]
         [HttpPost]
         public async Task<ObjectResult> Login(LoginUserViewModel loginUser)
         {
             var user = await _accountService.Login(loginUser);
-            if (user == null) return BadRequest(user);
+                if (user == null) return BadRequest("Пользователь не найден");
             user.Token = await Authenticate(user);
             return Ok(user);
         }
@@ -40,7 +42,7 @@ namespace dsKnowledgeTest.Controllers
             await _emailService.SendEmailAsync(user.Email, "Пароль для входа", DEFAULT_PASSWORD);
             return Ok(user);
         }
-        private async Task<string> Authenticate(UserViewModel user)
+        private Task<string> Authenticate(UserViewModel user)
         {
             var claims = new List<Claim>
             {
@@ -52,10 +54,10 @@ namespace dsKnowledgeTest.Controllers
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(30)), // время действия 2 минуты
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(30)), // время действия 30 минут
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(jwt));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using dsKnowledgeTest.Constants;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using dsKnowledgeTest.Constants;
 
 namespace dsKnowledgeTest.Models;
 
@@ -10,8 +11,34 @@ public class Question
     public int NumberOfPoints { get; set; }
     public string? IconUrl { get; set; }
 
+    [NotMapped]
+    public List<string>? ListAnswers
+    {
+        get
+        {
+            return this.Answers.Split(',').ToList();
+        }
+        set
+        {
+            this.Answers = string.Join(",", value);
+        }
+    }
+
+    public string Answers { get; set; }
+    [NotMapped]
+    public List<string>? ListTrueAnswers
+    {
+        get
+        {
+            return this.TrueAnswers.Split(',').ToList();
+        }
+        set
+        {
+            this.TrueAnswers = string.Join(",", value);
+        }
+    }
+    public string TrueAnswers { get; set; }
+
     public Guid? TestId { get; set; }
-    public Test? Test { get; set; }
-    public ICollection<Answer> Answers { get; set; }
-    public ICollection<TrueAnswer> TrueAnswers { get; set; }
+    public Test?  Test { get; set; }
 }

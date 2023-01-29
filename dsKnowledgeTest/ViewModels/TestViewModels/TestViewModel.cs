@@ -1,10 +1,10 @@
 ﻿using dsKnowledgeTest.Constants;
 
-namespace dsKnowledgeTest.ViewModels;
+namespace dsKnowledgeTest.ViewModels.TestViewModel;
 
 public class TestViewModel
 {
-    public Guid? Id { get; set; }
+    public string? Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
     public string? ImageUrl { get; set; }
@@ -13,5 +13,5 @@ public class TestViewModel
     public int? TimeForTest { get; set; }
     public int? Score { get; set; }
     public int? CntQuestion { get; set; }
-    public Guid CategoryId { get; set; }
+    public string? CategoryId { get; set; }
 }

@@ -34,11 +34,11 @@ public class UserController : ControllerBase
     }
     [Authorize]
     [Route("GetById")]
-    [HttpPost]
+    [HttpGet]
     public async Task<ObjectResult> GetById(string userId)
     {
         var userGuid = Guid.Parse(userId);
-        var user = _userService.GetByIdAsync(userGuid);
+        var user = await _userService.GetByIdAsync(userGuid);
         if (user == null) return BadRequest("Пользователь не найден");
         return Ok(user);
     }

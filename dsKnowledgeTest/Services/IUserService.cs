@@ -21,7 +21,7 @@ namespace dsKnowledgeTest.Services
 
         public async Task EditUserAsync(UpdateUserViewModel model)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id.ToString() == model.Id);
 
             if (user != null)
             {
@@ -44,7 +44,7 @@ namespace dsKnowledgeTest.Services
             return await _db.Users.AsNoTracking()
                 .Select(u => new UserViewModel
                 {
-                    Id = u.Id,
+                    Id = u.Id.ToString(),
                     Email = u.Email,
                     Login = u.Login,
                     Password = u.Password,
@@ -59,7 +59,7 @@ namespace dsKnowledgeTest.Services
                     RoleName = u.Role.ToString(),
                     Token = ""
                 })
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
     }
 }

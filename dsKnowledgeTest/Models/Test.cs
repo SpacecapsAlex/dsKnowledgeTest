@@ -17,8 +17,8 @@ public class Test
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
 
-    public Guid CategoryId { get; set; }
-    public Category Category { get; set; }
+    public Guid? CategoryId { get; set; }
+    public Category? Category { get; set; }
 
-    public List<Question> Questions { get; set; }
+    public List<Question>? Questions { get; set; }
 }
