@@ -33,7 +33,7 @@ public class CategoryController : ControllerBase
         return Ok(category);
     }
 
-    //[Authorize(Roles = nameof(RolesConst.Admin))]
+    [Authorize(Roles = nameof(RolesConst.Admin))]
     [Route("Create")]
     [HttpPost]
     public async Task<ObjectResult> Create(CreateCategoryViewModel category)
@@ -49,7 +49,7 @@ public class CategoryController : ControllerBase
         }
     }
 
-    //[Authorize(Roles = nameof(RolesConst.Admin))]
+    [Authorize(Roles = nameof(RolesConst.Admin))]
     [Route("Edit")]
     [HttpPost]
     public async Task<ObjectResult> Edit(EditCategoryViewModel category)
@@ -65,7 +65,7 @@ public class CategoryController : ControllerBase
         }
     }
 
-    //[Authorize(Roles = nameof(RolesConst.Admin))]
+    [Authorize(Roles = nameof(RolesConst.Admin))]
     [Route("Delete")]
     [HttpDelete]
     public async Task<ObjectResult> Delete(string categoryId)

@@ -66,8 +66,8 @@ public class TestController : ControllerBase
             return BadRequest("Произошла ошибка");
         }
     }
-
-     [Authorize(Roles = nameof(RolesConst.Admin))]
+    
+    [Authorize(Roles = nameof(RolesConst.Admin))]
     [Route("EditTestWithQuestion")]
     [HttpPost]
     public async Task<ObjectResult> EditTestWithQuestion(EditTestWithQuestionsViewModel test)
@@ -75,7 +75,7 @@ public class TestController : ControllerBase
         try
         {
             await _testService.EditTestWithQuestionsAsync(test);
-            return Ok("Данные добавлены");
+            return Ok("Данные обновлены");
         }
         catch
         {
