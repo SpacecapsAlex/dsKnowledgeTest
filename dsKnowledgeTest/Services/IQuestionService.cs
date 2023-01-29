@@ -25,8 +25,6 @@ public class QuestionService : IQuestionService
 
     public async Task<List<QuestionViewModel>?> GetAllQuestionForTestAsync(Guid testId) =>
         await _db.Questions
-            .Include("Answers")
-            .Include("TrueAnswers")
             .Select(q => new QuestionViewModel
             {
                 Id = q.Id.ToString(),

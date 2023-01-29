@@ -49,8 +49,8 @@ public class QuestionController : ControllerBase
             return BadRequest("Произошла ошибка");
         }
     }
-
-     [Authorize(Roles = nameof(RolesConst.Admin))]
+    
+    [Authorize(Roles = nameof(RolesConst.Admin))]
     [Route("Edit")]
     [HttpPost]
     public async Task<ObjectResult> Edit(EditQuestionViewModel question)
