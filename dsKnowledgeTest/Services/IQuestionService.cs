@@ -24,7 +24,7 @@ public class QuestionService : IQuestionService
     }
 
     public async Task<List<QuestionViewModel>?> GetAllQuestionForTestAsync(Guid testId) =>
-        await _db.Questions
+        await _db.Questions.Where(q => q.IsDeleted == false)
             .Select(q => new QuestionViewModel
             {
                 Id = q.Id.ToString(),
@@ -64,7 +64,8 @@ public class QuestionService : IQuestionService
             IconUrl = question.IconUrl,
             TestId = Guid.Parse(question.TestId),
             ListAnswers = question.Answers,
-            ListTrueAnswers = question.TrueAnswers
+            ListTrueAnswers = question.TrueAnswers,
+            IsDeleted = false
         });
         await _db.SaveChangesAsync();
 
@@ -99,7 +100,8 @@ public class QuestionService : IQuestionService
         var question = await _db.Questions.FirstOrDefaultAsync(questionItem => questionItem.Id == questionId);
         if (question != null)
         {
-            _db.Questions.Remove(question);
+            question.IsDeleted = true;
+            _db.Questions.Update(question);
 
             var testQuestion = await _db.Tests.FirstOrDefaultAsync(x => x.Id == question.TestId);
             if (testQuestion != null)

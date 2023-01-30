@@ -26,7 +26,9 @@ public class CategoryService : ICategoryService
     }
 
     public async Task<IEnumerable<Category>> GetAllCategoriesAsync() =>
-        await _db.Categories.ToListAsync();
+        await _db.Categories
+            .Where(c => c.IsDeleted == false)
+            .ToListAsync();
 
     public async Task<string?> GetNameOfCategoryAsync(Guid categoryId) =>
         (await _db.Categories.FirstOrDefaultAsync(category => category.Id == categoryId))?.Name;
@@ -57,6 +59,7 @@ public class CategoryService : ICategoryService
             CreatedDate = new DateTime(),
             ImageUrl = category.ImageUrl,
             UpdatedDate = new DateTime(),
+            IsDeleted = false
         });
         await _db.SaveChangesAsync();
     }
@@ -69,7 +72,6 @@ public class CategoryService : ICategoryService
             categoryVm.Description = category.Description ?? categoryVm.Description;
             categoryVm.Name = category.Name ?? categoryVm.Name;
             categoryVm.ImageUrl = category.ImageUrl ?? categoryVm.ImageUrl;
-            categoryVm.CreatedDate = categoryVm.CreatedDate;
             categoryVm.UpdatedDate = new DateTime();
 
             _db.Categories.Update(categoryVm);
@@ -82,7 +84,8 @@ public class CategoryService : ICategoryService
         var category = await _db.Categories.FirstOrDefaultAsync(categoryItem => categoryItem.Id == categoryId);
         if (category != null)
         {
-            _db.Categories.Remove(category);
+            category.IsDeleted = true;
+            _db.Categories.Update(category);
             await _db.SaveChangesAsync();
         }
     }

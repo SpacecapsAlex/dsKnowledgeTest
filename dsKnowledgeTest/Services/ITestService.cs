@@ -31,7 +31,9 @@ public class TestService : ITestService
     }
 
     public async Task<List<Test>> GetAllTestsAsync() =>
-        await _db.Tests.ToListAsync();
+        await _db.Tests
+            .Where(t => t.IsDeleted == false)
+            .ToListAsync();
 
     public async Task<List<Test>> GetAllTestByCategoryAsync(Guid categoryId) =>
         await _db.Tests.Where(test => test.CategoryId == categoryId).ToListAsync();
@@ -67,6 +69,7 @@ public class TestService : ITestService
             TimeForTest = test.TimeForTest,
             IsTestOnTime = test.IsTestOnTime,
             Score = test.Score,
+            IsDeleted = false
         });
         await _db.SaveChangesAsync();
 
@@ -103,7 +106,8 @@ public class TestService : ITestService
         var test = await _db.Tests.FirstOrDefaultAsync(testItem => testItem.Id == testId);
         if (test != null)
         {
-            _db.Tests.Remove(test);
+            test.IsDeleted = true;
+            _db.Tests.Update(test);
 
             var categoryTest = await _db.Categories.FirstOrDefaultAsync(x => x.Id == test.CategoryId);
             if (categoryTest != null)

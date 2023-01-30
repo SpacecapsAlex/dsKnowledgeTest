@@ -8,7 +8,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAKqo2GevNUEuLEdqp87W/dgAAAAACAAAAAAAQZgAAAAEAACAAAAAEq30msIQ/2M7tbZqyZVnEv3NOYSXn0QTm/QfbNraQIAAAAAAOgAAAAAIAACAAAAC4eXAnhxibSP6X/Uu6RG3gl0tm9PVNlXZ5YHBeCRJcjSAAAADG2etVmmc2g6Stk6RxAQO+CDf+9NkDIerQwX0Djl9sc0AAAAB1l5QYcRfLvVoNu+0yGYqQrlfhGHmID6h8xresdfX9U6vKiGdH4BME98Han4ButWKNZzcYqsaYz5GkODzMjT8c</EncryptedPassword>
     <_PublishTargetUrl>ftp://win5040.site4now.net/dsknowledgetest</_PublishTargetUrl>
-    <History>False|2023-01-29T22:38:18.8142294Z;True|2023-01-25T21:02:36.3939324+03:00;</History>
+    <History>True|2023-01-30T06:35:16.0253915Z;False|2023-01-30T09:29:22.9475245+03:00;False|2023-01-30T01:38:18.8142294+03:00;True|2023-01-25T21:02:36.3939324+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -21,16 +21,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/19/2021 14:53:34</publishTime>
     </File>
     <File Include="dsKnowledgeTest.deps.json">
-      <publishTime>01/30/2023 01:35:20</publishTime>
+      <publishTime>01/30/2023 09:31:30</publishTime>
     </File>
     <File Include="dsKnowledgeTest.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>01/30/2023 09:31:30</publishTime>
     </File>
     <File Include="dsKnowledgeTest.exe">
-      <publishTime>01/30/2023 01:35:14</publishTime>
+      <publishTime>01/30/2023 09:31:30</publishTime>
     </File>
     <File Include="dsKnowledgeTest.pdb">
-      <publishTime>01/30/2023 01:35:14</publishTime>
+      <publishTime>01/30/2023 09:31:30</publishTime>
     </File>
     <File Include="dsKnowledgeTest.runtimeconfig.json">
       <publishTime>01/30/2023 01:35:15</publishTime>
@@ -51,25 +51,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/21/2021 02:59:32</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Abstractions.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>11/30/2022 16:18:36</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>11/30/2022 16:18:54</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Relational.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>11/30/2022 16:19:06</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.SqlServer.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>11/30/2022 16:19:14</publishTime>
     </File>
     <File Include="Microsoft.Extensions.Caching.Memory.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>01/14/2022 22:54:16</publishTime>
     </File>
     <File Include="Microsoft.Extensions.DependencyInjection.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>09/26/2022 20:42:22</publishTime>
     </File>
     <File Include="Microsoft.Identity.Client.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>10/20/2020 00:51:12</publishTime>
     </File>
     <File Include="Microsoft.IdentityModel.JsonWebTokens.dll">
       <publishTime>03/30/2021 22:40:56</publishTime>
@@ -87,7 +87,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/30/2021 22:52:10</publishTime>
     </File>
     <File Include="Microsoft.OpenApi.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>08/29/2020 23:14:12</publishTime>
     </File>
     <File Include="Microsoft.Win32.SystemEvents.dll">
       <publishTime>11/15/2019 11:36:56</publishTime>
@@ -141,16 +141,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/15/2019 11:53:46</publishTime>
     </File>
     <File Include="Swashbuckle.AspNetCore.Swagger.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>10/16/2021 15:54:10</publishTime>
     </File>
     <File Include="Swashbuckle.AspNetCore.SwaggerGen.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>10/16/2021 15:54:36</publishTime>
     </File>
     <File Include="Swashbuckle.AspNetCore.SwaggerUI.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>10/16/2021 15:54:30</publishTime>
     </File>
     <File Include="System.Configuration.ConfigurationManager.dll">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>11/15/2019 11:37:04</publishTime>
     </File>
     <File Include="System.Drawing.Common.dll">
       <publishTime>09/18/2018 22:38:14</publishTime>
@@ -171,7 +171,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/15/2019 11:56:52</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>01/30/2023 01:35:20</publishTime>
+      <publishTime>01/30/2023 09:31:30</publishTime>
     </File>
   </ItemGroup>
 </Project>

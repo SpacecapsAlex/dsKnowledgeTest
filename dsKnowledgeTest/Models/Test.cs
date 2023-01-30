@@ -13,6 +13,7 @@ public class Test
     public int? TimeForTest { get; set; }
     public int? Score { get; set; }
     public int? CntQuestion { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }

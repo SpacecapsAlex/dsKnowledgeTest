@@ -38,6 +38,7 @@ public class Question
         }
     }
     public string TrueAnswers { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public Guid? TestId { get; set; }
     public Test?  Test { get; set; }
