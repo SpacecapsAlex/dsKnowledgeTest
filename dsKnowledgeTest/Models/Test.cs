@@ -22,4 +22,7 @@ public class Test
     public Category? Category { get; set; }
 
     public List<Question>? Questions { get; set; }
+
+    public List<PassedTest>? PassedTests { get; set; }
+
 }

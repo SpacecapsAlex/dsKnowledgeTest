@@ -16,4 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<Faq> Faq { get; set; }
     public DbSet<Feedback> Feedbacks { get; set; }
     public DbSet<Question> Questions { get; set; }
+    public DbSet<PassedTest> PassedTests { get; set; }
+    public DbSet<AnsweredQuestion> AnsweredQuestions { get; set; }
+
 }

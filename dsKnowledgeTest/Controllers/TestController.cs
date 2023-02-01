@@ -27,6 +27,14 @@ public class TestController : ControllerBase
         return Ok(tests);
     }
 
+    [Route("SearchTests")]
+    [HttpGet]
+    public async Task<ObjectResult> SearchTests(string testName)
+    {
+        var tests = await _testService.SearchTestsAsync(testName);
+        return Ok(tests);
+    }
+
     [Route("GetTestById")]
     [HttpGet]
     public async Task<ObjectResult> GetTestById(string testId)

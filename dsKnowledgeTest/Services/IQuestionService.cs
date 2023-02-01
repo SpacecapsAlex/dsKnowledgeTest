@@ -1,4 +1,5 @@
-﻿using dsKnowledgeTest.Data;
+﻿using dsKnowledgeTest.Constants;
+using dsKnowledgeTest.Data;
 using dsKnowledgeTest.Models;
 using dsKnowledgeTest.ViewModels.QuestionViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +30,10 @@ public class QuestionService : IQuestionService
             {
                 Id = q.Id.ToString(),
                 Name = q.Name,
-                QuestionType = q.QuestionType,
+                QuestionType = q.QuestionType.ToString(),
                 NumberOfPoints = q.NumberOfPoints,
                 IconUrl = q.IconUrl,
+                Explanation = q.Explanation,
                 TestId = q.TestId.ToString(),
                 Answers = q.ListAnswers,
                 TrueAnswers = q.ListTrueAnswers
@@ -44,9 +46,10 @@ public class QuestionService : IQuestionService
             {
                 Id = q.Id.ToString(),
                 Name = q.Name,
-                QuestionType = q.QuestionType,
+                QuestionType = q.QuestionType.ToString(),
                 NumberOfPoints = q.NumberOfPoints,
                 IconUrl = q.IconUrl,
+                Explanation = q.Explanation,
                 TestId = q.TestId.ToString(),
                 Answers = q.ListAnswers,
                 TrueAnswers = q.ListTrueAnswers
@@ -59,9 +62,10 @@ public class QuestionService : IQuestionService
         await _db.Questions.AddAsync(new Question
         {
             Name = question.Name,
-            QuestionType = question.QuestionType,
+            QuestionType = (QuestionType) Enum.Parse(typeof(QuestionType), question.QuestionType),
             NumberOfPoints = question.NumberOfPoints,
             IconUrl = question.IconUrl,
+            Explanation = question.Explanation,
             TestId = Guid.Parse(question.TestId),
             ListAnswers = question.Answers,
             ListTrueAnswers = question.TrueAnswers,
@@ -83,10 +87,11 @@ public class QuestionService : IQuestionService
         if (questionVm != null)
         {
             questionVm.Name = question.Name ?? questionVm.Name;
-            questionVm.QuestionType = question.QuestionType ?? questionVm.QuestionType;
+            questionVm.QuestionType = (QuestionType) Enum.Parse(typeof(QuestionType), question.QuestionType);
             questionVm.NumberOfPoints = question.NumberOfPoints ?? questionVm.NumberOfPoints;
             questionVm.IconUrl = question.IconUrl ?? questionVm.IconUrl;
             questionVm.TestId = Guid.Parse(question.TestId);
+            questionVm.Explanation = question.Explanation ?? questionVm.Explanation;
             questionVm.ListAnswers = question.Answers ?? questionVm.ListAnswers;
             questionVm.ListTrueAnswers = question.TrueAnswers ?? questionVm.ListTrueAnswers;
             

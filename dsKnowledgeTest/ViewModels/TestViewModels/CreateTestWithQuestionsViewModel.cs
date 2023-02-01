@@ -8,7 +8,7 @@ namespace dsKnowledgeTest.ViewModels.TestViewModels
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }
-        public TestLevel? TestLevel { get; set; }
+        public string? TestLevel { get; set; }
         public bool? IsTestOnTime { get; set; }
         public int? TimeForTest { get; set; }
         public int? Score { get; set; }

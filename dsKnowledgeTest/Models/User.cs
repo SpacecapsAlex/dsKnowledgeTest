@@ -24,5 +24,7 @@ namespace dsKnowledgeTest.Models
         public bool IsDeleted { get; set; }
         public RolesConst Role { get; set; }
 
+        public List<PassedTest>? PassedTests { get; set; }
+
     }
 }

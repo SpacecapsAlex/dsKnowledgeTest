@@ -70,6 +70,12 @@ namespace dsKnowledgeTest.Services
 
                 await _db.Users.AddAsync(new User
                 {
+                    FirstName = registerUser.FirstName,
+                    LastName = registerUser.LastName,
+                    SurName = registerUser.SurName,
+                    Organization = registerUser.Organization,
+                    Specialization = registerUser.Specialization,
+                    PhoneNumber = registerUser.PhoneNumber,
                     Email = registerUser.Email,
                     Password = HaspPassword(DEFAULT_PASSWORD),
                     DataCreated = DateTime.Now,

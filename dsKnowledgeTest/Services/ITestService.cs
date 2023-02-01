@@ -1,4 +1,5 @@
-﻿using dsKnowledgeTest.Data;
+﻿using dsKnowledgeTest.Constants;
+using dsKnowledgeTest.Data;
 using dsKnowledgeTest.Models;
 using dsKnowledgeTest.ViewModels.QuestionViewModels;
 using dsKnowledgeTest.ViewModels.TestViewModel;
@@ -9,14 +10,15 @@ namespace dsKnowledgeTest.Services;
 
 public interface ITestService
 {
-    Task<List<Test>> GetAllTestsAsync();
-    Task<List<Test>> GetAllTestByCategoryAsync(Guid categoryId);
+    Task<List<TestViewModel>> GetAllTestsAsync();
+    Task<List<TestViewModel>> GetAllTestByCategoryAsync(Guid categoryId);
     Task<TestViewModel?> GetTestByIdAsync(Guid testId);
     Task CreateTestAsync(CreateTestViewModel test);
     Task EditTestAsync(EditTestViewModel test);
     Task DeleteTestAsync(Guid testId);
     Task CreateTestWithQuestionsAsync(CreateTestWithQuestionsViewModel test);
     Task EditTestWithQuestionsAsync(EditTestWithQuestionsViewModel test);
+    Task<List<TestViewModel>> SearchTestsAsync(string testName);
 }
 
 public class TestService : ITestService
@@ -30,13 +32,38 @@ public class TestService : ITestService
         _questionService = questionService;
     }
 
-    public async Task<List<Test>> GetAllTestsAsync() =>
+    public async Task<List<TestViewModel>> GetAllTestsAsync() =>
         await _db.Tests
             .Where(t => t.IsDeleted == false)
+            .Select(t => new TestViewModel
+            {
+                Id = t.Id.ToString(),
+                Name = t.Name,
+                Description = t.Description,
+                ImageUrl = t.ImageUrl,
+                TestLevel = t.TestLevel.ToString(),
+                TimeForTest = t.TimeForTest,
+                Score = t.Score,
+                CntQuestion = t.CntQuestion,
+                CategoryId = t.CategoryId.ToString()
+            })
             .ToListAsync();
 
-    public async Task<List<Test>> GetAllTestByCategoryAsync(Guid categoryId) =>
-        await _db.Tests.Where(test => test.CategoryId == categoryId).ToListAsync();
+    public async Task<List<TestViewModel>> GetAllTestByCategoryAsync(Guid categoryId) =>
+        await _db.Tests
+            .Where(test => test.CategoryId == categoryId)
+            .Select(t => new TestViewModel
+            {
+                Id = t.Id.ToString(),
+                Name = t.Name,
+                Description = t.Description,
+                ImageUrl = t.ImageUrl,
+                TestLevel = t.TestLevel.ToString(),
+                TimeForTest = t.TimeForTest,
+                Score = t.Score,
+                CntQuestion = t.CntQuestion,
+                CategoryId = t.CategoryId.ToString()
+            }).ToListAsync();
 
     public  async Task<TestViewModel?> GetTestByIdAsync(Guid testId) {
         return await _db.Tests.Select(t => new TestViewModel
@@ -45,7 +72,7 @@ public class TestService : ITestService
             Name = t.Name,
             Description = t.Description,
             ImageUrl = t.ImageUrl,
-            TestLevel = t.TestLevel,
+            TestLevel = t.TestLevel.ToString(),
             IsTestOnTime = t.IsTestOnTime,
             TimeForTest = t.TimeForTest,
             Score = t.Score,
@@ -58,7 +85,7 @@ public class TestService : ITestService
     {
         await _db.Tests.AddAsync(new Test()
         {
-            TestLevel = test.TestLevel,
+            TestLevel = (TestLevel) Enum.Parse(typeof(TestLevel),test.TestLevel),
             CategoryId = Guid.Parse(test.CategoryId),
             Description = test.Description,
             Name = test.Name,
@@ -89,11 +116,10 @@ public class TestService : ITestService
             testVm.Name = test.Name ?? testVm.Name;
             testVm.Description = test.Description ?? testVm.Description;
             testVm.UpdatedDate = new DateTime();
-            testVm.TestLevel = test.TestLevel ?? testVm.TestLevel;
             testVm.ImageUrl = test.ImageUrl ?? testVm.ImageUrl;
             testVm.TimeForTest = test.TimeForTest ?? testVm.TimeForTest;
             testVm.IsTestOnTime = test.IsTestOnTime ?? testVm.IsTestOnTime;
-            testVm.TestLevel = test.TestLevel ?? testVm.TestLevel;
+            testVm.TestLevel = (TestLevel)Enum.Parse(typeof(TestLevel), test.TestLevel);
             testVm.Score = test.Score ?? testVm.Score;
 
             _db.Tests.Update(testVm);
@@ -182,5 +208,24 @@ public class TestService : ITestService
                 TrueAnswers = q.TrueAnswers,
             });
         }
+    }
+
+    public async Task<List<TestViewModel>> SearchTestsAsync(string testName)
+    {
+        return await _db.Tests
+            .Where(t => t.IsDeleted == false && t.Name.ToLower().Contains(testName.ToLower()))
+            .Select(t => new TestViewModel
+            {
+                Id = t.Id.ToString(),
+                Name = t.Name,
+                Description = t.Description,
+                ImageUrl = t.ImageUrl,
+                TestLevel = t.TestLevel.ToString(),
+                TimeForTest = t.TimeForTest,
+                Score = t.Score,
+                CntQuestion = t.CntQuestion,
+                CategoryId = t.CategoryId.ToString()
+            })
+            .ToListAsync();
     }
 }
