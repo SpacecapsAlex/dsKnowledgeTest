@@ -54,7 +54,7 @@ namespace dsKnowledgeTest.Controllers
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(30)), // время действия 30 минут
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1440)), // время действия 1440 минут(сутки)
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(jwt));
