@@ -8,7 +8,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAKqo2GevNUEuLEdqp87W/dgAAAAACAAAAAAAQZgAAAAEAACAAAAAEq30msIQ/2M7tbZqyZVnEv3NOYSXn0QTm/QfbNraQIAAAAAAOgAAAAAIAACAAAAC4eXAnhxibSP6X/Uu6RG3gl0tm9PVNlXZ5YHBeCRJcjSAAAADG2etVmmc2g6Stk6RxAQO+CDf+9NkDIerQwX0Djl9sc0AAAAB1l5QYcRfLvVoNu+0yGYqQrlfhGHmID6h8xresdfX9U6vKiGdH4BME98Han4ButWKNZzcYqsaYz5GkODzMjT8c</EncryptedPassword>
     <_PublishTargetUrl>ftp://win5040.site4now.net/dsknowledgetest</_PublishTargetUrl>
-    <History>True|2023-01-30T19:53:19.7613767Z;False|2023-01-30T22:49:14.2459233+03:00;True|2023-01-30T09:35:16.0253915+03:00;False|2023-01-30T09:29:22.9475245+03:00;False|2023-01-30T01:38:18.8142294+03:00;True|2023-01-25T21:02:36.3939324+03:00;</History>
+    <History>True|2023-02-02T08:55:53.6846905Z;False|2023-02-02T11:51:42.1580831+03:00;True|2023-01-30T22:53:19.7613767+03:00;False|2023-01-30T22:49:14.2459233+03:00;True|2023-01-30T09:35:16.0253915+03:00;False|2023-01-30T09:29:22.9475245+03:00;False|2023-01-30T01:38:18.8142294+03:00;True|2023-01-25T21:02:36.3939324+03:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
@@ -21,16 +21,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/19/2021 14:53:34</publishTime>
     </File>
     <File Include="dsKnowledgeTest.deps.json">
-      <publishTime>01/30/2023 22:50:06</publishTime>
+      <publishTime>02/02/2023 11:52:02</publishTime>
     </File>
     <File Include="dsKnowledgeTest.dll">
-      <publishTime>01/30/2023 22:50:06</publishTime>
+      <publishTime>02/02/2023 11:52:02</publishTime>
     </File>
     <File Include="dsKnowledgeTest.exe">
-      <publishTime>01/30/2023 22:50:06</publishTime>
+      <publishTime>02/02/2023 11:52:02</publishTime>
     </File>
     <File Include="dsKnowledgeTest.pdb">
-      <publishTime>01/30/2023 22:50:06</publishTime>
+      <publishTime>02/02/2023 11:52:02</publishTime>
     </File>
     <File Include="dsKnowledgeTest.runtimeconfig.json">
       <publishTime>01/30/2023 01:35:15</publishTime>
@@ -171,7 +171,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/15/2019 11:56:52</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>01/30/2023 22:50:06</publishTime>
+      <publishTime>02/02/2023 11:52:02</publishTime>
     </File>
   </ItemGroup>
 </Project>
