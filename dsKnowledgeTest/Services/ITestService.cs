@@ -13,6 +13,7 @@ public interface ITestService
     Task<List<TestViewModel>> GetAllTestsAsync();
     Task<List<TestViewModel>> GetAllTestByCategoryAsync(Guid categoryId);
     Task<TestViewModel?> GetTestByIdAsync(Guid testId);
+    Task<TestWithQuestionsViewModel?> GetTestByIdWithQuestionsAsync(Guid testId);
     Task CreateTestAsync(CreateTestViewModel test);
     Task EditTestAsync(EditTestViewModel test);
     Task DeleteTestAsync(Guid testId);
@@ -45,7 +46,9 @@ public class TestService : ITestService
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
                 CntQuestion = t.CntQuestion,
-                CategoryId = t.CategoryId.ToString()
+                CategoryId = t.CategoryId.ToString(),
+                IsRandomAnswers = t.IsRandomAnswers,
+                IsRandomQuestions = t.IsRandomQuestions
             })
             .ToListAsync();
 
@@ -62,7 +65,9 @@ public class TestService : ITestService
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
                 CntQuestion = t.CntQuestion,
-                CategoryId = t.CategoryId.ToString()
+                CategoryId = t.CategoryId.ToString(),
+                IsRandomAnswers = t.IsRandomAnswers,
+                IsRandomQuestions = t.IsRandomQuestions
             }).ToListAsync();
 
     public  async Task<TestViewModel?> GetTestByIdAsync(Guid testId) {
@@ -77,8 +82,33 @@ public class TestService : ITestService
             TimeForTest = t.TimeForTest,
             Score = t.Score,
             CntQuestion = t.CntQuestion,
-            CategoryId = t.CategoryId.ToString()
+            CategoryId = t.CategoryId.ToString(),
+            IsRandomAnswers = t.IsRandomAnswers,
+            IsRandomQuestions = t.IsRandomQuestions
         }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
+    }
+
+    public async Task<TestWithQuestionsViewModel?> GetTestByIdWithQuestionsAsync(Guid testId)
+    {
+        var questions = await _questionService.GetAllQuestionForTestAsync(testId);
+        var tests = await _db.Tests.Select(t => new TestWithQuestionsViewModel
+        {
+            Id = t.Id.ToString(),
+            Name = t.Name,
+            Description = t.Description,
+            ImageUrl = t.ImageUrl,
+            TestLevel = t.TestLevel.ToString(),
+            IsTestOnTime = t.IsTestOnTime,
+            TimeForTest = t.TimeForTest,
+            Score = t.Score,
+            CntQuestion = t.CntQuestion,
+            CategoryId = t.CategoryId.ToString(),
+            IsRandomAnswers = t.IsRandomAnswers,
+            IsRandomQuestions = t.IsRandomQuestions,
+            Questions = new List<QuestionViewModel>()
+        }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
+        tests.Questions = questions;
+        return tests;
     }
 
     public async Task CreateTestAsync(CreateTestViewModel test)
@@ -90,13 +120,15 @@ public class TestService : ITestService
             Description = test.Description,
             Name = test.Name,
             CntQuestion = 0,
-            CreatedDate = new DateTime(),
+            CreatedDate = DateTime.Now,
             ImageUrl = test.ImageUrl,
-            UpdatedDate = new DateTime(),
+            UpdatedDate = DateTime.Now,
             TimeForTest = test.TimeForTest,
             IsTestOnTime = test.IsTestOnTime,
             Score = test.Score,
-            IsDeleted = false
+            IsDeleted = false,
+            IsRandomAnswers = test.IsRandomAnswers,
+            IsRandomQuestions = test.IsRandomQuestions
         });
         await _db.SaveChangesAsync();
 
@@ -115,12 +147,14 @@ public class TestService : ITestService
         {
             testVm.Name = test.Name ?? testVm.Name;
             testVm.Description = test.Description ?? testVm.Description;
-            testVm.UpdatedDate = new DateTime();
+            testVm.UpdatedDate = DateTime.Now;
             testVm.ImageUrl = test.ImageUrl ?? testVm.ImageUrl;
             testVm.TimeForTest = test.TimeForTest ?? testVm.TimeForTest;
             testVm.IsTestOnTime = test.IsTestOnTime ?? testVm.IsTestOnTime;
             testVm.TestLevel = (TestLevel)Enum.Parse(typeof(TestLevel), test.TestLevel);
             testVm.Score = test.Score ?? testVm.Score;
+            testVm.IsRandomQuestions = test.IsRandomQuestions ?? testVm.IsRandomQuestions;
+            testVm.IsRandomAnswers = test.IsRandomAnswers ?? testVm.IsRandomAnswers;
 
             _db.Tests.Update(testVm);
             await _db.SaveChangesAsync();
@@ -155,7 +189,9 @@ public class TestService : ITestService
             IsTestOnTime = test.IsTestOnTime,
             Score = test.Score,
             TestLevel = test.TestLevel,
-            TimeForTest = test.TimeForTest
+            TimeForTest = test.TimeForTest,
+            IsRandomAnswers = test.IsRandomAnswers,
+            IsRandomQuestions = test.IsRandomQuestions
         });
         await _db.SaveChangesAsync();
 
@@ -188,7 +224,9 @@ public class TestService : ITestService
             IsTestOnTime = test.IsTestOnTime,
             Score = test.Score,
             TestLevel = test.TestLevel,
-            TimeForTest = test.TimeForTest
+            TimeForTest = test.TimeForTest,
+            IsRandomAnswers = test.IsRandomAnswers,
+            IsRandomQuestions = test.IsRandomQuestions
         });
         await _db.SaveChangesAsync();
 
@@ -224,7 +262,9 @@ public class TestService : ITestService
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
                 CntQuestion = t.CntQuestion,
-                CategoryId = t.CategoryId.ToString()
+                CategoryId = t.CategoryId.ToString(),
+                IsRandomAnswers = t.IsRandomAnswers,
+                IsRandomQuestions = t.IsRandomQuestions
             })
             .ToListAsync();
     }

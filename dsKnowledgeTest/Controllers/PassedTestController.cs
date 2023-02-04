@@ -50,5 +50,15 @@ namespace dsKnowledgeTest.Controllers
             var passedTests = await _passedTestService.GetByIdAsync(passedTestId);
             return Ok(passedTests);
         }
+
+        //[Authorize]
+        [Route("GetStatistics")]
+        [HttpGet]
+        public async Task<ObjectResult> GetStatistics(string userId, int month, int year)
+        {
+            var statistics = 
+                await _passedTestService.GetStatisticsPassedTestsByUserIdAsync(userId, month, year);
+            return Ok(statistics);
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace dsKnowledgeTest.Services
         Task CreatePassedTestAsync(CreatePassedTestViewModel model);
         Task<List<PassedTestViewModel>> GetAllPassedTestsByUserIdAsync(string userId);
         Task<PassedTestViewModel?> GetByIdAsync(string passedTestId);
+        Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync(string userId, int mounth, int year);
     }
 
     class PassedTestService : IPassedTestService
@@ -116,6 +117,65 @@ namespace dsKnowledgeTest.Services
             passedTest.CategoryName = (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == passedTest.TestId)).Category.Name;
 
             return passedTest;
+        }
+
+        public async Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync
+            (string userId, int month, int year)
+        {
+            List<PassedTest> passedTests; 
+            var statisticsPassedTest = new List<StatisticsPassedTestViewModel?>();
+            if (month == 0)
+            {
+                passedTests = await _db.PassedTests
+                    .Where(p =>
+                        p.Id.ToString() == userId &&
+                        p.DateOfPassage.Year == year
+                    )
+                    .ToListAsync();
+
+                for (int i = 1; i < 12; i++)
+                {
+                    var scoresForMonth =
+                        (from t in passedTests
+                            where t.DateOfPassage.Month == i
+                            select passedTests[i].Score).ToList();
+                    statisticsPassedTest.Add(new StatisticsPassedTestViewModel
+                    {
+                        CountPassedTest = scoresForMonth.Count,
+                        AverageScore =  scoresForMonth.Count == 0 ? 0 : scoresForMonth.Sum() / scoresForMonth.Count
+                    });
+                }
+            }
+            else
+            {
+                passedTests = await _db.PassedTests
+                    .Where(p =>
+                        p.Id.ToString() == userId &&
+                        p.DateOfPassage.Year == year &&
+                        p.DateOfPassage.Month == month
+                    )
+                    .ToListAsync();
+
+                var startDate = new DateTime(year, month, 1);
+                var endDateDay = startDate.AddMonths(1).AddDays(-1).Day;
+
+                for (int i = 1; i < endDateDay; i++)
+                {
+                    var scoresForDay = 
+                        (from t in passedTests 
+                            where t.DateOfPassage.Day == i 
+                            select passedTests[i].Score).ToList();
+                    statisticsPassedTest.Add(new StatisticsPassedTestViewModel
+                    {
+                        CountPassedTest = scoresForDay.Count,
+                        AverageScore = scoresForDay.Count == 0 ? 0 : scoresForDay.Sum() / scoresForDay.Count
+                    });
+                }
+
+            }
+            
+
+            return statisticsPassedTest;
         }
     }
 }

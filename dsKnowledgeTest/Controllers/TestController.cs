@@ -39,7 +39,7 @@ public class TestController : ControllerBase
     [HttpGet]
     public async Task<ObjectResult> GetTestById(string testId)
     {
-        var test = await _testService.GetTestByIdAsync(Guid.Parse(testId));
+        var test = await _testService.GetTestByIdWithQuestionsAsync(Guid.Parse(testId));
         return Ok(test);
     }
 

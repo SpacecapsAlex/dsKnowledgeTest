@@ -13,6 +13,8 @@ namespace dsKnowledgeTest.ViewModels.TestViewModels
         public int? TimeForTest { get; set; }
         public int? Score { get; set; }
         public string CategoryId { get; set; }
+        public bool? IsRandomQuestions { get; set; }
+        public bool? IsRandomAnswers { get; set; }
         public List<CreateQuestionWithoutTestIdViewModel>? Questions{ get; set; }
 }
 }

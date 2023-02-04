@@ -1,9 +1,8 @@
-﻿using dsKnowledgeTest.Constants;
-using dsKnowledgeTest.Models;
+﻿using dsKnowledgeTest.ViewModels.QuestionViewModels;
 
-namespace dsKnowledgeTest.ViewModels.TestViewModel
+namespace dsKnowledgeTest.ViewModels.TestViewModels
 {
-    public class EditTestViewModel
+    public class TestWithQuestionsViewModel
     {
         public string? Id { get; set; }
         public string? Name { get; set; }
@@ -13,9 +12,11 @@ namespace dsKnowledgeTest.ViewModels.TestViewModel
         public bool? IsTestOnTime { get; set; }
         public int? TimeForTest { get; set; }
         public int? Score { get; set; }
+        public int? CntQuestion { get; set; }
         public string? CategoryId { get; set; }
         public bool? IsRandomQuestions { get; set; }
         public bool? IsRandomAnswers { get; set; }
 
+        public List<QuestionViewModel>? Questions { get; set; }
     }
 }

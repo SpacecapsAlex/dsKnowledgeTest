@@ -13,7 +13,7 @@ public class Question
     public string? IconUrl { get; set; }
 
     [NotMapped]
-    public List<string>? ListAnswers
+    public List<string?>? ListAnswers
     {
         get
         {
@@ -21,24 +21,27 @@ public class Question
         }
         set
         {
+            this.ListAnswers?.RemoveAll(item => item == null);
             this.Answers = string.Join(",", value);
         }
     }
 
-    public string Answers { get; set; }
+    public string? Answers { get; set; }
     [NotMapped]
-    public List<string>? ListTrueAnswers
+    public List<string?>? ListTrueAnswers
     {
         get
         {
+            
             return this.TrueAnswers.Split(',').ToList();
         }
         set
         {
+            this.ListTrueAnswers?.RemoveAll(item => item == null);
             this.TrueAnswers = string.Join(",", value);
         }
     }
-    public string TrueAnswers { get; set; }
+    public string? TrueAnswers { get; set; }
     public bool? IsDeleted { get; set; }
 
     public Guid? TestId { get; set; }

@@ -116,4 +116,16 @@ public class QuestionService : IQuestionService
             await _db.SaveChangesAsync();
         }
     }
+
+    private List<string> GetRandomSort(List<string> list)
+    {
+        Random random = new Random();
+        for (int i = 0; i < list.Count; i++)
+        {
+            int j = random.Next(i + 1);
+
+            (list[j], list[i]) = (list[i], list[j]);
+        }
+        return list;
+    }
 }

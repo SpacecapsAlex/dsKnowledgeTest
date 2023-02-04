@@ -56,9 +56,9 @@ public class CategoryService : ICategoryService
             Name = category.Name,
             Description = category.Description,
             CntTest = 0,
-            CreatedDate = new DateTime(),
+            CreatedDate = DateTime.Now,
             ImageUrl = category.ImageUrl,
-            UpdatedDate = new DateTime(),
+            UpdatedDate = DateTime.Now,
             IsDeleted = false
         });
         await _db.SaveChangesAsync();
@@ -72,7 +72,7 @@ public class CategoryService : ICategoryService
             categoryVm.Description = category.Description ?? categoryVm.Description;
             categoryVm.Name = category.Name ?? categoryVm.Name;
             categoryVm.ImageUrl = category.ImageUrl ?? categoryVm.ImageUrl;
-            categoryVm.UpdatedDate = new DateTime();
+            categoryVm.UpdatedDate = DateTime.Now;
 
             _db.Categories.Update(categoryVm);
             await _db.SaveChangesAsync();

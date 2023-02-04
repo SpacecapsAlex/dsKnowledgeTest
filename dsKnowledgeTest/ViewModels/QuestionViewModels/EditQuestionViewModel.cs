@@ -12,7 +12,7 @@ namespace dsKnowledgeTest.ViewModels.QuestionViewModels
         public string? Explanation { get; set; }
 
         public string? TestId { get; set; }
-        public List<string>? Answers { get; set; }
-        public List<string>? TrueAnswers { get; set; }
+        public List<string?>? Answers { get; set; }
+        public List<string?>? TrueAnswers { get; set; }
     }
 }

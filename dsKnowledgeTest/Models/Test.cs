@@ -14,6 +14,8 @@ public class Test
     public int? Score { get; set; }
     public int? CntQuestion { get; set; }
     public bool? IsDeleted { get; set; }
+    public bool? IsRandomQuestions { get; set; }
+    public bool? IsRandomAnswers { get; set; }
 
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
