@@ -33,7 +33,7 @@ namespace dsKnowledgeTest.Controllers
             }
         }
 
-       // [Authorize]
+        [Authorize]
         [Route("GetAllByUser")]
         [HttpGet]
         public async Task<ObjectResult> GetAllByUser(string userId)
