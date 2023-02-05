@@ -51,7 +51,7 @@ namespace dsKnowledgeTest.Controllers
             return Ok(passedTests);
         }
 
-        //[Authorize]
+        [Authorize]
         [Route("GetStatistics")]
         [HttpGet]
         public async Task<ObjectResult> GetStatistics(string userId, int month, int year)

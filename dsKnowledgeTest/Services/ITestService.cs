@@ -90,7 +90,6 @@ public class TestService : ITestService
 
     public async Task<TestWithQuestionsViewModel?> GetTestByIdWithQuestionsAsync(Guid testId)
     {
-        var questions = await _questionService.GetAllQuestionForTestAsync(testId);
         var tests = await _db.Tests.Select(t => new TestWithQuestionsViewModel
         {
             Id = t.Id.ToString(),
@@ -107,6 +106,8 @@ public class TestService : ITestService
             IsRandomQuestions = t.IsRandomQuestions,
             Questions = new List<QuestionViewModel>()
         }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
+        var questions = 
+            await _questionService.GetAllQuestionForTestWithSortAsync(testId, tests.IsRandomQuestions, tests.IsRandomAnswers);
         tests.Questions = questions;
         return tests;
     }

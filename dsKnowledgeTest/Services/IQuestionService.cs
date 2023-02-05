@@ -9,6 +9,10 @@ namespace dsKnowledgeTest.Services;
 public interface IQuestionService
 {
     Task<List<QuestionViewModel>?> GetAllQuestionForTestAsync(Guid testId);
+
+    Task<List<QuestionViewModel>?> GetAllQuestionForTestWithSortAsync(Guid testId, bool? isRandomQuestions,
+        bool? isRandomAnswers);
+
     Task<QuestionViewModel?> GetQuestionByIdAsync(Guid questionId);
     Task CreateQuestionAsync(CreateQuestionViewModel question);
     Task EditQuestionAsync(EditQuestionViewModel question);
@@ -39,6 +43,26 @@ public class QuestionService : IQuestionService
                 TrueAnswers = q.ListTrueAnswers
             }).Where(x => x.TestId == testId.ToString()).ToListAsync();
 
+    public async Task<List<QuestionViewModel>?> GetAllQuestionForTestWithSortAsync(Guid testId, bool? isRandomQuestions,
+        bool? isRandomAnswers)
+    {
+        var questions = await _db.Questions.Where(q => q.IsDeleted == false)
+            .Select(q => new QuestionViewModel
+            {
+                Id = q.Id.ToString(),
+                Name = q.Name,
+                QuestionType = q.QuestionType.ToString(),
+                NumberOfPoints = q.NumberOfPoints,
+                IconUrl = q.IconUrl,
+                Explanation = q.Explanation,
+                TestId = q.TestId.ToString(),
+                Answers = isRandomAnswers == true ? GetRandomSortAnswers(q.ListAnswers) : q.ListAnswers,
+                TrueAnswers = q.ListTrueAnswers
+            }).Where(x => x.TestId == testId.ToString()).ToListAsync();
+
+        return isRandomQuestions == true ? GetRandomSortQuestions(questions) : questions;
+    }
+
     public async Task<QuestionViewModel?> GetQuestionByIdAsync(Guid questionId)
     {
         return await _db.Questions
@@ -62,7 +86,7 @@ public class QuestionService : IQuestionService
         await _db.Questions.AddAsync(new Question
         {
             Name = question.Name,
-            QuestionType = (QuestionType) Enum.Parse(typeof(QuestionType), question.QuestionType),
+            QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), question.QuestionType),
             NumberOfPoints = question.NumberOfPoints,
             IconUrl = question.IconUrl,
             Explanation = question.Explanation,
@@ -78,6 +102,7 @@ public class QuestionService : IQuestionService
         {
             testQuestion.CntQuestion++;
         }
+
         await _db.SaveChangesAsync();
     }
 
@@ -87,14 +112,14 @@ public class QuestionService : IQuestionService
         if (questionVm != null)
         {
             questionVm.Name = question.Name ?? questionVm.Name;
-            questionVm.QuestionType = (QuestionType) Enum.Parse(typeof(QuestionType), question.QuestionType);
+            questionVm.QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), question.QuestionType);
             questionVm.NumberOfPoints = question.NumberOfPoints ?? questionVm.NumberOfPoints;
             questionVm.IconUrl = question.IconUrl ?? questionVm.IconUrl;
             questionVm.TestId = Guid.Parse(question.TestId);
             questionVm.Explanation = question.Explanation ?? questionVm.Explanation;
             questionVm.ListAnswers = question.Answers ?? questionVm.ListAnswers;
             questionVm.ListTrueAnswers = question.TrueAnswers ?? questionVm.ListTrueAnswers;
-            
+
             _db.Questions.Update(questionVm);
             await _db.SaveChangesAsync();
         }
@@ -113,18 +138,39 @@ public class QuestionService : IQuestionService
             {
                 testQuestion.CntQuestion--;
             }
+
             await _db.SaveChangesAsync();
         }
     }
 
-    private List<string> GetRandomSort(List<string> list)
+    static List<string?>? GetRandomSortAnswers(List<string?>? list)
     {
-        Random random = new Random();
-        for (int i = 0; i < list.Count; i++)
+        var l = list;
+        if (l != null || l.Count <= 1)
         {
-            int j = random.Next(i + 1);
+            Random random = new Random();
+            for (int i = 0; i < l.Count; i++)
+            {
+                int j = random.Next(i + 1);
 
-            (list[j], list[i]) = (list[i], list[j]);
+                (l[j], l[i]) = (l[i], l[j]);
+            }
+        }
+        return l;
+    }
+
+    static List<QuestionViewModel>? GetRandomSortQuestions(List<QuestionViewModel>? l)
+    {
+        var list = l;
+        if (list != null || list.Count <= 1)
+        {
+            Random random = new Random();
+            for (int i = 0; i < list.Count; i++)
+            {
+                int j = random.Next(i + 1);
+
+                (list[j], list[i]) = (list[i], list[j]);
+            }
         }
         return list;
     }

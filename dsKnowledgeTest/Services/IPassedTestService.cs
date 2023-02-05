@@ -11,7 +11,7 @@ namespace dsKnowledgeTest.Services
         Task CreatePassedTestAsync(CreatePassedTestViewModel model);
         Task<List<PassedTestViewModel>> GetAllPassedTestsByUserIdAsync(string userId);
         Task<PassedTestViewModel?> GetByIdAsync(string passedTestId);
-        Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync(string userId, int mounth, int year);
+        Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync(string userId, int month, int year);
     }
 
     class PassedTestService : IPassedTestService
@@ -122,23 +122,20 @@ namespace dsKnowledgeTest.Services
         public async Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync
             (string userId, int month, int year)
         {
-            List<PassedTest> passedTests; 
             var statisticsPassedTest = new List<StatisticsPassedTestViewModel?>();
             if (month == 0)
             {
-                passedTests = await _db.PassedTests
-                    .Where(p =>
-                        p.Id.ToString() == userId &&
-                        p.DateOfPassage.Year == year
-                    )
-                    .ToListAsync();
-
-                for (int i = 1; i < 12; i++)
+                for (int i = 1; i <= 12; i++)
                 {
-                    var scoresForMonth =
-                        (from t in passedTests
-                            where t.DateOfPassage.Month == i
-                            select passedTests[i].Score).ToList();
+                    var scoresForMonth = await _db.PassedTests
+                        .Where(p =>
+                            p.UserId.ToString() == userId &&
+                            p.DateOfPassage.Year == year &&
+                            p.DateOfPassage.Month == i
+                        )
+                        .Select(t => t.Score)
+                        .ToListAsync();
+
                     statisticsPassedTest.Add(new StatisticsPassedTestViewModel
                     {
                         CountPassedTest = scoresForMonth.Count,
@@ -148,23 +145,20 @@ namespace dsKnowledgeTest.Services
             }
             else
             {
-                passedTests = await _db.PassedTests
-                    .Where(p =>
-                        p.Id.ToString() == userId &&
-                        p.DateOfPassage.Year == year &&
-                        p.DateOfPassage.Month == month
-                    )
-                    .ToListAsync();
-
                 var startDate = new DateTime(year, month, 1);
                 var endDateDay = startDate.AddMonths(1).AddDays(-1).Day;
 
-                for (int i = 1; i < endDateDay; i++)
+                for (int i = 1; i <= endDateDay; i++)
                 {
-                    var scoresForDay = 
-                        (from t in passedTests 
-                            where t.DateOfPassage.Day == i 
-                            select passedTests[i].Score).ToList();
+                    var scoresForDay = await _db.PassedTests
+                        .Where(p =>
+                            p.UserId.ToString() == userId &&
+                            p.DateOfPassage.Year == year &&
+                            p.DateOfPassage.Month == month &&
+                            p.DateOfPassage.Day == i
+                        )
+                        .Select(t => t.Score)
+                        .ToListAsync();
                     statisticsPassedTest.Add(new StatisticsPassedTestViewModel
                     {
                         CountPassedTest = scoresForDay.Count,
