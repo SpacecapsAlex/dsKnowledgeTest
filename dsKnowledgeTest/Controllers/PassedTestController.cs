@@ -33,21 +33,12 @@ namespace dsKnowledgeTest.Controllers
             }
         }
 
-        [Authorize]
+       // [Authorize]
         [Route("GetAllByUser")]
         [HttpGet]
         public async Task<ObjectResult> GetAllByUser(string userId)
         {
             var passedTests = await _passedTestService.GetAllPassedTestsByUserIdAsync(userId);
-            return Ok(passedTests);
-        }
-
-        [Authorize]
-        [Route("GetFilteredByUser")]
-        [HttpPost]
-        public async Task<ObjectResult> GetFilteredByUser(FilterPassedTestViewModel filter)
-        {
-            var passedTests = await _passedTestService.GetFilteredPassedTestsByUserIdAsync(filter);
             return Ok(passedTests);
         }
 
