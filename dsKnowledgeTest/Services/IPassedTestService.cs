@@ -10,6 +10,7 @@ namespace dsKnowledgeTest.Services
     {
         Task CreatePassedTestAsync(CreatePassedTestViewModel model);
         Task<List<PassedTestViewModel>> GetAllPassedTestsByUserIdAsync(string userId);
+        Task<List<PassedTestViewModel>> GetFilteredPassedTestsByUserIdAsync(FilterPassedTestViewModel filter);
         Task<PassedTestViewModel?> GetByIdAsync(string passedTestId);
         Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync(string userId, int month, int year);
     }
@@ -86,6 +87,43 @@ namespace dsKnowledgeTest.Services
             }
 
             return passedTests;
+        }
+
+        public async Task<List<PassedTestViewModel>> GetFilteredPassedTestsByUserIdAsync(FilterPassedTestViewModel filter)
+        {
+            var passedTests = await _db.PassedTests
+                .Include("Test")
+                .Where(p => p.UserId.ToString() == filter.UserId &&
+                            p.DateOfPassage.Year >= filter.MinYear && p.DateOfPassage.Year <= filter.MaxYear &&
+                            p.Score >= filter.MinScore && p.Score <= filter.MaxScore &&
+                            filter.Statuses.Contains(p.Status)
+                            )
+                .Select(t => new PassedTestViewModel
+                {
+                    Id = t.Id.ToString(),
+                    TimeSpent = t.TimeSpent,
+                    Status = t.Status,
+                    DateOfPassage = t.DateOfPassage.ToString(),
+                    Score = t.Score,
+                    TestName = t.Test.Name,
+                    TestId = t.TestId.ToString(),
+                    UserId = t.UserId.ToString(),
+                })
+                .ToListAsync();
+            foreach (var t in passedTests)
+            {
+                t.AnsweredQuestions = await _db.AnsweredQuestions.Select(a =>
+                    new AnsweredQuestionWithoutPassedTestIdViewModel
+                    {
+                        Id = a.Id.ToString(),
+                        Score = a.Score,
+                        QuestionId = a.QuestionId.ToString(),
+                        ListSelectedAnswers = a.ListSelectedAnswers
+                    }).ToListAsync();
+                t.CategoryName = (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == t.TestId)).Category.Name;
+            }
+
+            return passedTests.Where(p => filter.Categoryes.Contains(p.CategoryName)).ToList();
         }
 
         public async Task<PassedTestViewModel?> GetByIdAsync(string passedTestId)
