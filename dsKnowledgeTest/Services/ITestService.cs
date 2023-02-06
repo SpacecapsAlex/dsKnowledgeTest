@@ -46,7 +46,7 @@ public class TestService : ITestService
                 TestLevel = t.TestLevel.ToString(),
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
@@ -66,7 +66,7 @@ public class TestService : ITestService
                 TestLevel = t.TestLevel.ToString(),
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
@@ -86,7 +86,7 @@ public class TestService : ITestService
                 IsTestOnTime = t.IsTestOnTime,
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
@@ -107,7 +107,7 @@ public class TestService : ITestService
                 IsTestOnTime = t.IsTestOnTime,
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions,
@@ -292,6 +292,7 @@ public class TestService : ITestService
     public async Task<List<TestViewModel>> SearchTestsAsync(string testName)
     {
         return await _db.Tests
+            .Include("Questions")
             .Where(t => t.IsDeleted == false && t.Name.ToLower().Contains(testName.ToLower()))
             .Select(t => new TestViewModel
             {
@@ -302,7 +303,7 @@ public class TestService : ITestService
                 TestLevel = t.TestLevel.ToString(),
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.CntQuestion,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions

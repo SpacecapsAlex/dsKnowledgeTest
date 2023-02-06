@@ -27,14 +27,14 @@ public class CategoryService : ICategoryService
 
     public async Task<IEnumerable<Category>> GetAllCategoriesAsync() =>
         await _db.Categories
-            .Include("Tests").
-            Select(c => new Category
+            .Include("Tests")
+            .Select(c => new Category
             {
                 Id = c.Id,
                 Name = c.Name,
                 Description = c.Description,
                 ImageUrl = c.ImageUrl,
-                CntTest = c.Tests.Count(),
+                CntTest = c.Tests.Count(t => t.IsDeleted == false),
                 IsDeleted = c.IsDeleted,
                 CreatedDate = c.CreatedDate,
                 UpdatedDate = c.UpdatedDate,
@@ -48,12 +48,14 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryViewModel?> GetCategoryByIdAsync(Guid categoryId)
     {
-        return await _db.Categories.Select(c => new CategoryViewModel
+        return await _db.Categories
+            .Include("Tests")
+            .Select(c => new CategoryViewModel
             {
                 Id = c.Id.ToString(),
                 Name = c.Name,
                 Description = c.Description,
-                CntTest = c.CntTest,
+                CntTest = c.Tests.Count(t => t.IsDeleted == false),
                 ImageUrl = c.ImageUrl
             })
             .FirstOrDefaultAsync(category => category.Id == categoryId.ToString());
@@ -79,7 +81,8 @@ public class CategoryService : ICategoryService
 
     public async Task EditCategoryAsync(EditCategoryViewModel category)
     {
-        var categoryVm = await _db.Categories.FirstOrDefaultAsync(categoryItem => categoryItem.Id.ToString() == category.Id);
+        var categoryVm =
+            await _db.Categories.FirstOrDefaultAsync(categoryItem => categoryItem.Id.ToString() == category.Id);
         if (categoryVm != null)
         {
             categoryVm.Description = category.Description ?? categoryVm.Description;

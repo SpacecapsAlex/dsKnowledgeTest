@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using dsKnowledgeTest.Constants;
 using dsKnowledgeTest.Services;
 using dsKnowledgeTest.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Mvc;
