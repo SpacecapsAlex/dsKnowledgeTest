@@ -75,13 +75,17 @@ namespace dsKnowledgeTest.Services
                 }).ToListAsync();
             foreach (var t in passedTests)
             {
-                t.AnsweredQuestions = await _db.AnsweredQuestions.Select(a =>
+                t.AnsweredQuestions = await _db.AnsweredQuestions
+                    .Include("Question")
+                    .Select(a =>
                     new AnsweredQuestionWithoutPassedTestIdViewModel
                     {
                         Id = a.Id.ToString(),
                         Score = a.Score,
                         QuestionId = a.QuestionId.ToString(),
-                        ListSelectedAnswers = a.ListSelectedAnswers
+                        ListSelectedAnswers = a.ListSelectedAnswers,
+                        ListAnswers = a.Question.ListAnswers,
+                        ListTrueAnswers = a.Question.ListTrueAnswers
                     }).ToListAsync();
                 t.CategoryName = (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == t.TestId)).Category.Name;
             }
@@ -106,13 +110,17 @@ namespace dsKnowledgeTest.Services
                 })
                 .FirstOrDefaultAsync(m => m.Id == passedTestId);
 
-            passedTest.AnsweredQuestions = await _db.AnsweredQuestions.Select(a =>
+            passedTest.AnsweredQuestions = await _db.AnsweredQuestions
+                .Include("Question")
+                .Select(a =>
                 new AnsweredQuestionWithoutPassedTestIdViewModel
                 {
                     Id = a.Id.ToString(),
                     Score = a.Score,
                     QuestionId = a.QuestionId.ToString(),
-                    ListSelectedAnswers = a.ListSelectedAnswers
+                    ListSelectedAnswers = a.ListSelectedAnswers,
+                    ListAnswers = a.Question.ListAnswers,
+                    ListTrueAnswers = a.Question.ListTrueAnswers
                 }).ToListAsync();
 
             passedTest.CategoryName = (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == passedTest.TestId)).Category.Name;

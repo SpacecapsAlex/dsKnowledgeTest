@@ -1,7 +1,6 @@
 ﻿using dsKnowledgeTest.Services;
 using dsKnowledgeTest.ViewModels.PassedTestViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dsKnowledgeTest.Controllers

@@ -21,7 +21,6 @@ public class Question
         }
         set
         {
-            this.ListAnswers?.RemoveAll(item => item == null);
             this.Answers = string.Join(",", value);
         }
     }
@@ -32,12 +31,10 @@ public class Question
     {
         get
         {
-            
             return this.TrueAnswers.Split(',').ToList();
         }
         set
         {
-            this.ListTrueAnswers?.RemoveAll(item => item == null);
             this.TrueAnswers = string.Join(",", value);
         }
     }

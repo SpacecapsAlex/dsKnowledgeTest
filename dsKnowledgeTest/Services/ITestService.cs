@@ -36,6 +36,7 @@ public class TestService : ITestService
     public async Task<List<TestViewModel>> GetAllTestsAsync() =>
         await _db.Tests
             .Where(t => t.IsDeleted == false)
+            .Include("Questions")
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),
@@ -45,7 +46,7 @@ public class TestService : ITestService
                 TestLevel = t.TestLevel.ToString(),
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.CntQuestion,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
@@ -55,6 +56,7 @@ public class TestService : ITestService
     public async Task<List<TestViewModel>> GetAllTestByCategoryAsync(Guid categoryId) =>
         await _db.Tests
             .Where(test => test.CategoryId == categoryId)
+            .Include("Questions")
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),
@@ -64,50 +66,56 @@ public class TestService : ITestService
                 TestLevel = t.TestLevel.ToString(),
                 TimeForTest = t.TimeForTest,
                 Score = t.Score,
-                CntQuestion = t.CntQuestion,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
                 CategoryId = t.CategoryId.ToString(),
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
             }).ToListAsync();
 
-    public  async Task<TestViewModel?> GetTestByIdAsync(Guid testId) {
-        return await _db.Tests.Select(t => new TestViewModel
-        {
-            Id = t.Id.ToString(),
-            Name = t.Name,
-            Description = t.Description,
-            ImageUrl = t.ImageUrl,
-            TestLevel = t.TestLevel.ToString(),
-            IsTestOnTime = t.IsTestOnTime,
-            TimeForTest = t.TimeForTest,
-            Score = t.Score,
-            CntQuestion = t.CntQuestion,
-            CategoryId = t.CategoryId.ToString(),
-            IsRandomAnswers = t.IsRandomAnswers,
-            IsRandomQuestions = t.IsRandomQuestions
-        }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
+    public async Task<TestViewModel?> GetTestByIdAsync(Guid testId)
+    {
+        return await _db.Tests
+            .Include("Questions")
+            .Select(t => new TestViewModel
+            {
+                Id = t.Id.ToString(),
+                Name = t.Name,
+                Description = t.Description,
+                ImageUrl = t.ImageUrl,
+                TestLevel = t.TestLevel.ToString(),
+                IsTestOnTime = t.IsTestOnTime,
+                TimeForTest = t.TimeForTest,
+                Score = t.Score,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
+                CategoryId = t.CategoryId.ToString(),
+                IsRandomAnswers = t.IsRandomAnswers,
+                IsRandomQuestions = t.IsRandomQuestions
+            }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
     }
 
     public async Task<TestWithQuestionsViewModel?> GetTestByIdWithQuestionsAsync(Guid testId)
     {
-        var tests = await _db.Tests.Select(t => new TestWithQuestionsViewModel
-        {
-            Id = t.Id.ToString(),
-            Name = t.Name,
-            Description = t.Description,
-            ImageUrl = t.ImageUrl,
-            TestLevel = t.TestLevel.ToString(),
-            IsTestOnTime = t.IsTestOnTime,
-            TimeForTest = t.TimeForTest,
-            Score = t.Score,
-            CntQuestion = t.CntQuestion,
-            CategoryId = t.CategoryId.ToString(),
-            IsRandomAnswers = t.IsRandomAnswers,
-            IsRandomQuestions = t.IsRandomQuestions,
-            Questions = new List<QuestionViewModel>()
-        }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
-        var questions = 
-            await _questionService.GetAllQuestionForTestWithSortAsync(testId, tests.IsRandomQuestions, tests.IsRandomAnswers);
+        var tests = await _db.Tests
+            .Include("Questions")
+            .Select(t => new TestWithQuestionsViewModel
+            {
+                Id = t.Id.ToString(),
+                Name = t.Name,
+                Description = t.Description,
+                ImageUrl = t.ImageUrl,
+                TestLevel = t.TestLevel.ToString(),
+                IsTestOnTime = t.IsTestOnTime,
+                TimeForTest = t.TimeForTest,
+                Score = t.Score,
+                CntQuestion = t.Questions == null ? 0 : t.Questions.Count,
+                CategoryId = t.CategoryId.ToString(),
+                IsRandomAnswers = t.IsRandomAnswers,
+                IsRandomQuestions = t.IsRandomQuestions,
+                Questions = new List<QuestionViewModel>()
+            }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
+        var questions =
+            await _questionService.GetAllQuestionForTestWithSortAsync(testId, tests.IsRandomQuestions,
+                tests.IsRandomAnswers);
         tests.Questions = questions;
         return tests;
     }
@@ -116,7 +124,7 @@ public class TestService : ITestService
     {
         await _db.Tests.AddAsync(new Test()
         {
-            TestLevel = (TestLevel) Enum.Parse(typeof(TestLevel),test.TestLevel),
+            TestLevel = (TestLevel)Enum.Parse(typeof(TestLevel), test.TestLevel),
             CategoryId = Guid.Parse(test.CategoryId),
             Description = test.Description,
             Name = test.Name,
@@ -138,6 +146,7 @@ public class TestService : ITestService
         {
             categoryTest.CntTest++;
         }
+
         await _db.SaveChangesAsync();
     }
 
@@ -175,6 +184,7 @@ public class TestService : ITestService
             {
                 categoryTest.CntTest--;
             }
+
             await _db.SaveChangesAsync();
         }
     }
@@ -209,6 +219,7 @@ public class TestService : ITestService
                 TestId = questionId.ToString(),
                 Answers = q.Answers,
                 TrueAnswers = q.TrueAnswers,
+                Explanation = q.Explanation
             });
         }
     }
@@ -235,17 +246,46 @@ public class TestService : ITestService
 
         foreach (var q in test.Questions)
         {
-            await _questionService.EditQuestionAsync(new EditQuestionViewModel
+            var questionInTest = await _questionService.GetAllQuestionForTestAsync(Guid.Parse(test.Id));
+
+            if (questionInTest != null)
+                foreach (var qtn in questionInTest)
+                {
+                    var deleteQuestion =
+                        test.Questions.Find(item => item.Id == qtn.Id);
+                    if (deleteQuestion == null)
+                        await _questionService.DeleteQuestionAsync(Guid.Parse(qtn.Id));
+                }
+
+            if (q.Id == null)
             {
-                Id = q.Id,
-                Name = q.Name,
-                QuestionType = q.QuestionType,
-                NumberOfPoints = q.NumberOfPoints,
-                IconUrl = q.IconUrl,
-                TestId = questionId.ToString(),
-                Answers = q.Answers,
-                TrueAnswers = q.TrueAnswers,
-            });
+                await _questionService.CreateQuestionAsync(new CreateQuestionViewModel
+                {
+                    Name = q.Name,
+                    QuestionType = q.QuestionType,
+                    NumberOfPoints = q.NumberOfPoints ?? 0,
+                    IconUrl = q.IconUrl,
+                    TestId = questionId.ToString(),
+                    Answers = q.Answers,
+                    TrueAnswers = q.TrueAnswers,
+                    Explanation = q.Explanation
+                });
+            }
+            else
+            {
+                await _questionService.EditQuestionAsync(new EditQuestionViewModel
+                {
+                    Id = q.Id,
+                    Name = q.Name,
+                    QuestionType = q.QuestionType,
+                    NumberOfPoints = q.NumberOfPoints,
+                    IconUrl = q.IconUrl,
+                    TestId = questionId.ToString(),
+                    Answers = q.Answers,
+                    TrueAnswers = q.TrueAnswers,
+                    Explanation = q.Explanation
+                });
+            }
         }
     }
 

@@ -27,6 +27,19 @@ public class CategoryService : ICategoryService
 
     public async Task<IEnumerable<Category>> GetAllCategoriesAsync() =>
         await _db.Categories
+            .Include("Tests").
+            Select(c => new Category
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                ImageUrl = c.ImageUrl,
+                CntTest = c.Tests.Count(),
+                IsDeleted = c.IsDeleted,
+                CreatedDate = c.CreatedDate,
+                UpdatedDate = c.UpdatedDate,
+                Tests = null
+            })
             .Where(c => c.IsDeleted == false)
             .ToListAsync();
 

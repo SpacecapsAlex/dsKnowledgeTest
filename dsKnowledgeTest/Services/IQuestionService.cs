@@ -83,6 +83,8 @@ public class QuestionService : IQuestionService
 
     public async Task CreateQuestionAsync(CreateQuestionViewModel question)
     {
+        question.TrueAnswers.RemoveAll(a => a == null);
+        question.Answers.RemoveAll(a => a == null);
         await _db.Questions.AddAsync(new Question
         {
             Name = question.Name,
@@ -96,7 +98,6 @@ public class QuestionService : IQuestionService
             IsDeleted = false
         });
         await _db.SaveChangesAsync();
-
         var testQuestion = await _db.Tests.FirstOrDefaultAsync(x => x.Id.ToString() == question.TestId);
         if (testQuestion != null)
         {
