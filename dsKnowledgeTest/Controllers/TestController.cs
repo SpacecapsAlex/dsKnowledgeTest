@@ -106,7 +106,7 @@ public class TestController : ControllerBase
             return BadRequest("Произошла ошибка");
         }
     }
-
+    
     [Authorize(Roles = nameof(RolesConst.Admin))]
     [Route("Delete")]
     [HttpDelete]

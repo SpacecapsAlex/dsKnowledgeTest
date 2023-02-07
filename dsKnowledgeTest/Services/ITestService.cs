@@ -55,7 +55,7 @@ public class TestService : ITestService
 
     public async Task<List<TestViewModel>> GetAllTestByCategoryAsync(Guid categoryId) =>
         await _db.Tests
-            .Where(test => test.CategoryId == categoryId)
+            .Where(test => test.CategoryId == categoryId && test.IsDeleted == false)
             .Include("Questions")
             .Select(t => new TestViewModel
             {
@@ -76,6 +76,7 @@ public class TestService : ITestService
     {
         return await _db.Tests
             .Include("Questions")
+            .Where(test => test.IsDeleted == false)
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),
@@ -97,6 +98,7 @@ public class TestService : ITestService
     {
         var tests = await _db.Tests
             .Include("Questions")
+            .Where(test => test.IsDeleted == false)
             .Select(t => new TestWithQuestionsViewModel
             {
                 Id = t.Id.ToString(),
