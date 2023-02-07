@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dsKnowledgeTest.Data;
 
@@ -11,9 +12,10 @@ using dsKnowledgeTest.Data;
 namespace dsKnowledgeTest.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230207112557_edit_answeredquestion_model")]
+    partial class edit_answeredquestion_model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,15 +335,13 @@ namespace dsKnowledgeTest.Migrations
 
             modelBuilder.Entity("dsKnowledgeTest.Models.AnsweredQuestion", b =>
                 {
-                    b.HasOne("dsKnowledgeTest.Models.PassedTest", "PassedTest")
+                    b.HasOne("dsKnowledgeTest.Models.PassedTest", null)
                         .WithMany("AnsweredQuestions")
                         .HasForeignKey("PassedTestId");
 
                     b.HasOne("dsKnowledgeTest.Models.Question", "Question")
                         .WithMany("AnsweredQuestions")
                         .HasForeignKey("QuestionId");
-
-                    b.Navigation("PassedTest");
 
                     b.Navigation("Question");
                 });

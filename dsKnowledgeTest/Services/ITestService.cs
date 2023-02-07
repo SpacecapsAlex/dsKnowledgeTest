@@ -175,11 +175,21 @@ public class TestService : ITestService
 
     public async Task DeleteTestAsync(Guid testId)
     {
-        var test = await _db.Tests.FirstOrDefaultAsync(testItem => testItem.Id == testId);
+        var test = await _db.Tests
+            .Include("Questions")
+            .FirstOrDefaultAsync(testItem => testItem.Id == testId);
         if (test != null)
         {
             test.IsDeleted = true;
             _db.Tests.Update(test);
+            await _db.SaveChangesAsync();
+
+            foreach (var question in test.Questions)
+            {
+                question.IsDeleted = true;
+                _db.Questions.Update(question);
+                await _db.SaveChangesAsync();
+            }
 
             var categoryTest = await _db.Categories.FirstOrDefaultAsync(x => x.Id == test.CategoryId);
             if (categoryTest != null)
@@ -208,7 +218,11 @@ public class TestService : ITestService
         });
         await _db.SaveChangesAsync();
 
-        var questionId = (await _db.Tests.FirstOrDefaultAsync(t => t.Name == test.Name)).Id;
+        var questionId = (await _db.Tests
+            .FirstOrDefaultAsync(t => t.Name == test.Name &&
+                                      t.Score == test.Score &&
+                                      t.Description == test.Description && 
+                                      t.CategoryId.ToString() == test.CategoryId)).Id;
 
         foreach (var q in test.Questions)
         {
@@ -244,21 +258,21 @@ public class TestService : ITestService
         });
         await _db.SaveChangesAsync();
 
-        var questionId = (await _db.Tests.FirstOrDefaultAsync(t => t.Name == test.Name)).Id;
+        var questionInTest = await _questionService.GetAllQuestionForTestAsync(Guid.Parse(test.Id));
+
+        if (questionInTest != null)
+            foreach (var qtn in questionInTest)
+            {
+                var deleteQuestion =
+                    test.Questions.Find(item => item.Id == qtn.Id);
+                if (deleteQuestion == null)
+                {
+                    await _questionService.DeleteQuestionAsync(Guid.Parse(qtn.Id));
+                }
+            }
 
         foreach (var q in test.Questions)
         {
-            var questionInTest = await _questionService.GetAllQuestionForTestAsync(Guid.Parse(test.Id));
-
-            if (questionInTest != null)
-                foreach (var qtn in questionInTest)
-                {
-                    var deleteQuestion =
-                        test.Questions.Find(item => item.Id == qtn.Id);
-                    if (deleteQuestion == null)
-                        await _questionService.DeleteQuestionAsync(Guid.Parse(qtn.Id));
-                }
-
             if (q.Id == null)
             {
                 await _questionService.CreateQuestionAsync(new CreateQuestionViewModel
@@ -267,7 +281,7 @@ public class TestService : ITestService
                     QuestionType = q.QuestionType,
                     NumberOfPoints = q.NumberOfPoints ?? 0,
                     IconUrl = q.IconUrl,
-                    TestId = questionId.ToString(),
+                    TestId = test.Id,
                     Answers = q.Answers,
                     TrueAnswers = q.TrueAnswers,
                     Explanation = q.Explanation
@@ -282,20 +296,23 @@ public class TestService : ITestService
                     QuestionType = q.QuestionType,
                     NumberOfPoints = q.NumberOfPoints,
                     IconUrl = q.IconUrl,
-                    TestId = questionId.ToString(),
+                    TestId = test.Id,
                     Answers = q.Answers,
                     TrueAnswers = q.TrueAnswers,
                     Explanation = q.Explanation
                 });
             }
         }
+        await _db.SaveChangesAsync();
     }
 
     public async Task<List<TestViewModel>> SearchTestsAsync(string testName)
     {
         return await _db.Tests
             .Include("Questions")
-            .Where(t => t.IsDeleted == false && t.Name.ToLower().Contains(testName.ToLower()))
+            .Where(t => t.IsDeleted == false &&
+                        t.Name.ToLower().Contains(testName.ToLower()) ||
+                        t.Description.ToLower().Contains(testName.ToLower()))
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),

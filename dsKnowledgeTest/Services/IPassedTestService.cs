@@ -11,7 +11,9 @@ namespace dsKnowledgeTest.Services
         Task CreatePassedTestAsync(CreatePassedTestViewModel model);
         Task<List<PassedTestViewModel>> GetAllPassedTestsByUserIdAsync(string userId);
         Task<PassedTestViewModel?> GetByIdAsync(string passedTestId);
-        Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync(string userId, int month, int year);
+
+        Task<List<StatisticsPassedTestViewModel?>> GetStatisticsPassedTestsByUserIdAsync(string userId, int month,
+            int year);
     }
 
     class PassedTestService : IPassedTestService
@@ -58,8 +60,9 @@ namespace dsKnowledgeTest.Services
 
         public async Task<List<PassedTestViewModel>> GetAllPassedTestsByUserIdAsync(string userId)
         {
-            var passedTests =  await _db.PassedTests
+            var passedTests = await _db.PassedTests
                 .Include("Test")
+                .Include("AnsweredQuestions")
                 .Where(p => p.UserId.ToString() == userId)
                 .Select(t => new PassedTestViewModel
                 {
@@ -72,22 +75,22 @@ namespace dsKnowledgeTest.Services
                     CntQuestion = t.Test.CntQuestion,
                     TestId = t.TestId.ToString(),
                     UserId = t.UserId.ToString(),
+                    AnsweredQuestions = t.AnsweredQuestions.Select(a =>
+                        new AnsweredQuestionWithoutPassedTestIdViewModel
+                        {
+                            Id = a.Id.ToString(),
+                            Score = a.Score,
+                            QuestionId = a.QuestionId.ToString(),
+                            ListSelectedAnswers = a.ListSelectedAnswers,
+                            ListAnswers = a.Question.ListAnswers,
+                            ListTrueAnswers = a.Question.ListTrueAnswers
+                        }).ToList()
                 }).ToListAsync();
             foreach (var t in passedTests)
             {
-                t.AnsweredQuestions = await _db.AnsweredQuestions
-                    .Include("Question")
-                    .Select(a =>
-                    new AnsweredQuestionWithoutPassedTestIdViewModel
-                    {
-                        Id = a.Id.ToString(),
-                        Score = a.Score,
-                        QuestionId = a.QuestionId.ToString(),
-                        ListSelectedAnswers = a.ListSelectedAnswers,
-                        ListAnswers = a.Question.ListAnswers,
-                        ListTrueAnswers = a.Question.ListTrueAnswers
-                    }).ToListAsync();
-                t.CategoryName = (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == t.TestId)).Category.Name;
+                t.CategoryName =
+                    (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == t.TestId)).Category
+                    .Name;
             }
 
             return passedTests;
@@ -97,6 +100,7 @@ namespace dsKnowledgeTest.Services
         {
             var passedTest = await _db.PassedTests
                 .Include("Test")
+                .Include("AnsweredQuestions")
                 .Select(t => new PassedTestViewModel
                 {
                     Id = t.Id.ToString(),
@@ -105,25 +109,25 @@ namespace dsKnowledgeTest.Services
                     DateOfPassage = t.DateOfPassage.ToString(),
                     Score = t.Score,
                     TestName = t.Test.Name,
+                    CntQuestion = t.Test.CntQuestion,
                     TestId = t.TestId.ToString(),
                     UserId = t.UserId.ToString(),
+                    AnsweredQuestions = t.AnsweredQuestions.Select(a =>
+                        new AnsweredQuestionWithoutPassedTestIdViewModel
+                        {
+                            Id = a.Id.ToString(),
+                            Score = a.Score,
+                            QuestionId = a.QuestionId.ToString(),
+                            ListSelectedAnswers = a.ListSelectedAnswers,
+                            ListAnswers = a.Question.ListAnswers,
+                            ListTrueAnswers = a.Question.ListTrueAnswers
+                        }).ToList()
                 })
                 .FirstOrDefaultAsync(m => m.Id == passedTestId);
 
-            passedTest.AnsweredQuestions = await _db.AnsweredQuestions
-                .Include("Question")
-                .Select(a =>
-                new AnsweredQuestionWithoutPassedTestIdViewModel
-                {
-                    Id = a.Id.ToString(),
-                    Score = a.Score,
-                    QuestionId = a.QuestionId.ToString(),
-                    ListSelectedAnswers = a.ListSelectedAnswers,
-                    ListAnswers = a.Question.ListAnswers,
-                    ListTrueAnswers = a.Question.ListTrueAnswers
-                }).ToListAsync();
-
-            passedTest.CategoryName = (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == passedTest.TestId)).Category.Name;
+            passedTest.CategoryName =
+                (await _db.Tests.Include("Category").FirstOrDefaultAsync(m => m.Id.ToString() == passedTest.TestId))
+                .Category.Name;
 
             return passedTest;
         }
@@ -148,7 +152,7 @@ namespace dsKnowledgeTest.Services
                     statisticsPassedTest.Add(new StatisticsPassedTestViewModel
                     {
                         CountPassedTest = scoresForMonth.Count,
-                        AverageScore =  scoresForMonth.Count == 0 ? 0 : scoresForMonth.Sum() / scoresForMonth.Count
+                        AverageScore = scoresForMonth.Count == 0 ? 0 : scoresForMonth.Sum() / scoresForMonth.Count
                     });
                 }
             }
@@ -174,9 +178,8 @@ namespace dsKnowledgeTest.Services
                         AverageScore = scoresForDay.Count == 0 ? 0 : scoresForDay.Sum() / scoresForDay.Count
                     });
                 }
-
             }
-            
+
             return statisticsPassedTest;
         }
     }

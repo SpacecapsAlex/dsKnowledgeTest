@@ -27,7 +27,7 @@ namespace dsKnowledgeTest.Services
             {
                 ListSelectedAnswers = model.ListSelectedAnswers,
                 Score = model.Score,
-                PassedTestsId = Guid.Parse(model.PassedTestsId),
+                PassedTestId = Guid.Parse(model.PassedTestsId),
                 QuestionId = Guid.Parse(model.QuestionId)
             });
             await _db.SaveChangesAsync();

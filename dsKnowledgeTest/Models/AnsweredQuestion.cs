@@ -20,7 +20,7 @@ namespace dsKnowledgeTest.Models
         public string? SelectedAnswers { get; set; }
         public int? Score { get; set; }
 
-        public Guid? PassedTestsId { get; set; }
+        public Guid? PassedTestId { get; set; }
         public PassedTest? PassedTest { get; set; }
 
         public Guid? QuestionId { get; set; }
