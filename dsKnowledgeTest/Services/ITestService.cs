@@ -311,8 +311,8 @@ public class TestService : ITestService
         return await _db.Tests
             .Include("Questions")
             .Where(t => t.IsDeleted == false &&
-                        t.Name.ToLower().Contains(testName.ToLower()) ||
-                        t.Description.ToLower().Contains(testName.ToLower()))
+                        (t.Name.ToLower().Contains(testName.ToLower()) ||
+                        t.Description.ToLower().Contains(testName.ToLower())))
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),
