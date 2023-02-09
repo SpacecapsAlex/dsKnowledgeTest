@@ -33,6 +33,7 @@ namespace dsKnowledgeTest.Services
                 user.Email = model.Email ?? user.Email;
                 user.PhoneNumber = model.PhoneNumber ?? user.PhoneNumber;
                 user.DataUpdated = DateTime.Now;
+                user.IconUrl = model.IconUrl ?? user.IconUrl;
 
                 _db.Users.Update(user);
                 await _db.SaveChangesAsync();
