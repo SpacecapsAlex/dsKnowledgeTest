@@ -19,10 +19,12 @@ public interface ICategoryService
 public class CategoryService : ICategoryService
 {
     private readonly AppDbContext _db;
+    private readonly ITestService _testService;
 
-    public CategoryService(AppDbContext db)
+    public CategoryService(AppDbContext db, ITestService testService)
     {
         _db = db;
+        _testService = testService;
     }
 
     public async Task<IEnumerable<Category>> GetAllCategoriesAsync() =>
@@ -97,12 +99,20 @@ public class CategoryService : ICategoryService
 
     public async Task DeleteCategoryAsync(Guid categoryId)
     {
-        var category = await _db.Categories.FirstOrDefaultAsync(categoryItem => categoryItem.Id == categoryId);
+        var category = await _db.Categories
+            .Include("Tests")
+            .FirstOrDefaultAsync(categoryItem => categoryItem.Id == categoryId);
         if (category != null)
         {
             category.IsDeleted = true;
             _db.Categories.Update(category);
             await _db.SaveChangesAsync();
+
+            if (category.Tests != null && category.Tests.Count > 0)
+                foreach (var test in category.Tests)
+                {
+                    await _testService.DeleteTestAsync(test.Id);
+                }
         }
     }
 }
