@@ -235,7 +235,6 @@ public class TestService : ITestService
                 TestId = questionId.ToString(),
                 Answers = q.Answers,
                 TrueAnswers = q.TrueAnswers,
-                Explanation = q.Explanation
             });
         }
     }
@@ -284,7 +283,6 @@ public class TestService : ITestService
                     TestId = test.Id,
                     Answers = q.Answers,
                     TrueAnswers = q.TrueAnswers,
-                    Explanation = q.Explanation
                 });
             }
             else
@@ -299,7 +297,6 @@ public class TestService : ITestService
                     TestId = test.Id,
                     Answers = q.Answers,
                     TrueAnswers = q.TrueAnswers,
-                    Explanation = q.Explanation
                 });
             }
         }

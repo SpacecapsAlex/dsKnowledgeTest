@@ -8,7 +8,6 @@ namespace dsKnowledgeTest.ViewModels.QuestionViewModels
         public string? QuestionType { get; set; }
         public int NumberOfPoints { get; set; }
         public string IconUrl { get; set; }
-        public string? Explanation { get; set; }
 
         public List<string?>? Answers { get; set; }
         public List<string?>? TrueAnswers { get; set; }

@@ -37,7 +37,6 @@ public class QuestionService : IQuestionService
                 QuestionType = q.QuestionType.ToString(),
                 NumberOfPoints = q.NumberOfPoints,
                 IconUrl = q.IconUrl,
-                Explanation = q.Explanation,
                 TestId = q.TestId.ToString(),
                 Answers = q.ListAnswers,
                 TrueAnswers = q.ListTrueAnswers
@@ -54,7 +53,6 @@ public class QuestionService : IQuestionService
                 QuestionType = q.QuestionType.ToString(),
                 NumberOfPoints = q.NumberOfPoints,
                 IconUrl = q.IconUrl,
-                Explanation = q.Explanation,
                 TestId = q.TestId.ToString(),
                 Answers = isRandomAnswers == true ? GetRandomSortAnswers(q.ListAnswers) : q.ListAnswers,
                 TrueAnswers = q.ListTrueAnswers
@@ -73,7 +71,6 @@ public class QuestionService : IQuestionService
                 QuestionType = q.QuestionType.ToString(),
                 NumberOfPoints = q.NumberOfPoints,
                 IconUrl = q.IconUrl,
-                Explanation = q.Explanation,
                 TestId = q.TestId.ToString(),
                 Answers = q.ListAnswers,
                 TrueAnswers = q.ListTrueAnswers
@@ -91,7 +88,6 @@ public class QuestionService : IQuestionService
             QuestionType = (QuestionType)Enum.Parse(typeof(QuestionType), question.QuestionType),
             NumberOfPoints = question.NumberOfPoints,
             IconUrl = question.IconUrl,
-            Explanation = question.Explanation,
             TestId = Guid.Parse(question.TestId),
             ListAnswers = question.Answers,
             ListTrueAnswers = question.TrueAnswers,
@@ -117,7 +113,6 @@ public class QuestionService : IQuestionService
             questionVm.NumberOfPoints = question.NumberOfPoints ?? questionVm.NumberOfPoints;
             questionVm.IconUrl = question.IconUrl ?? questionVm.IconUrl;
             questionVm.TestId = Guid.Parse(question.TestId);
-            questionVm.Explanation = question.Explanation ?? questionVm.Explanation;
             questionVm.ListAnswers = question.Answers ?? questionVm.ListAnswers;
             questionVm.ListTrueAnswers = question.TrueAnswers ?? questionVm.ListTrueAnswers;
 

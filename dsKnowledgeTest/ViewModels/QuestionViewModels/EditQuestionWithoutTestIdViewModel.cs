@@ -11,6 +11,5 @@ namespace dsKnowledgeTest.ViewModels.QuestionViewModels
         public string? IconUrl { get; set; }
         public List<string?>? Answers { get; set; }
         public List<string?>? TrueAnswers { get; set; }
-        public string? Explanation { get; set; }
     }
 }
