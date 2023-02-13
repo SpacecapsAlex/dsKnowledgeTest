@@ -58,6 +58,7 @@ builder.Services.AddTransient<IQuestionService, QuestionService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAnsweredQuestionService, AnsweredQuestionService>();
 builder.Services.AddTransient<IPassedTestService, PassedTestService>();
+builder.Services.AddTransient<IPasswordService, PasswordService>();
 
 var app = builder.Build();
 

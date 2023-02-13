@@ -12,15 +12,12 @@ namespace dsKnowledgeTest.Services
     public interface IAccountService
     {
         public Task<UserViewModel?> Login(LoginUserViewModel loginUser);
-        public Task<UserViewModel?> Register(RegisterUserViewModel registerUser);
+        public Task<UserViewModel?> Register(RegisterUserViewModel registerUser, string hashPassword);
     }
 
     public class AccountService : IAccountService
     {
-        public const int LOGIN_MIN_LENGHT = 6;
-        public const int PASSWORD_MIN_LENGHT = 6;
         public const int EMAIL_MIN_LENGHT = 6;
-        public const string DEFAULT_PASSWORD = "12345678";
 
         private readonly AppDbContext _db;
 
@@ -62,7 +59,7 @@ namespace dsKnowledgeTest.Services
             }
         }
 
-        public async Task<UserViewModel?> Register(RegisterUserViewModel registerUser)
+        public async Task<UserViewModel?> Register(RegisterUserViewModel registerUser, string hashPassword)
         {
             try
             {
@@ -77,7 +74,7 @@ namespace dsKnowledgeTest.Services
                     Specialization = registerUser.Specialization,
                     PhoneNumber = registerUser.PhoneNumber,
                     Email = registerUser.Email,
-                    Password = HaspPassword(DEFAULT_PASSWORD),
+                    Password = hashPassword,
                     DataCreated = DateTime.Now,
                     DataUpdated = DateTime.Now,
                     Role = RolesConst.User,
