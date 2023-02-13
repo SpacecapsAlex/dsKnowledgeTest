@@ -37,6 +37,7 @@ public class TestService : ITestService
         await _db.Tests
             .Where(t => t.IsDeleted == false)
             .Include("Questions")
+            .Include("Category")
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),
@@ -48,6 +49,8 @@ public class TestService : ITestService
                 Score = t.Score,
                 CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
+                CategoryName = t.Category.Name,
+                IsTestOnTime = t.IsTestOnTime,
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
             })
@@ -57,6 +60,7 @@ public class TestService : ITestService
         await _db.Tests
             .Where(test => test.CategoryId == categoryId && test.IsDeleted == false)
             .Include("Questions")
+            .Include("Category")
             .Select(t => new TestViewModel
             {
                 Id = t.Id.ToString(),
@@ -68,6 +72,8 @@ public class TestService : ITestService
                 Score = t.Score,
                 CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
+                CategoryName = t.Category.Name,
+                IsTestOnTime = t.IsTestOnTime,
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
             }).ToListAsync();
@@ -76,6 +82,7 @@ public class TestService : ITestService
     {
         return await _db.Tests
             .Include("Questions")
+            .Include("Category")
             .Where(test => test.IsDeleted == false)
             .Select(t => new TestViewModel
             {
@@ -89,6 +96,7 @@ public class TestService : ITestService
                 Score = t.Score,
                 CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
+                CategoryName = t.Category.Name,
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
             }).FirstOrDefaultAsync(x => x.Id == testId.ToString());
@@ -307,6 +315,7 @@ public class TestService : ITestService
     {
         return await _db.Tests
             .Include("Questions")
+            .Include("Category")
             .Where(t => t.IsDeleted == false &&
                         (t.Name.ToLower().Contains(testName.ToLower()) ||
                         t.Description.ToLower().Contains(testName.ToLower())))
@@ -321,6 +330,8 @@ public class TestService : ITestService
                 Score = t.Score,
                 CntQuestion = t.Questions == null ? 0 : t.Questions.Count(q => q.IsDeleted == false),
                 CategoryId = t.CategoryId.ToString(),
+                CategoryName = t.Category.Name,
+                IsTestOnTime = t.IsTestOnTime,
                 IsRandomAnswers = t.IsRandomAnswers,
                 IsRandomQuestions = t.IsRandomQuestions
             })

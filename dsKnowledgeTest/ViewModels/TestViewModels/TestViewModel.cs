@@ -14,6 +14,7 @@ public class TestViewModel
     public int? Score { get; set; }
     public int? CntQuestion { get; set; }
     public string? CategoryId { get; set; }
+    public string? CategoryName { get; set; }
     public bool? IsRandomQuestions { get; set; }
     public bool? IsRandomAnswers { get; set; }
 }
