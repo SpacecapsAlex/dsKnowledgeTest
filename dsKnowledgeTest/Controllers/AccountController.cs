@@ -11,15 +11,15 @@ namespace dsKnowledgeTest.Controllers
     [Route("[controller]")]
     public class AccountController : ControllerBase
     {
-        public const string DEFAULT_PASSWORD = "12345678";
-
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
+        private readonly IPasswordService _passwordService;
 
-        public AccountController(IAccountService accountService, IEmailService emailService)
+        public AccountController(IAccountService accountService, IEmailService emailService, IPasswordService passwordService)
         {
             _accountService = accountService;
             _emailService = emailService;
+            _passwordService = passwordService;
         }
 
         [Route("Login")]
@@ -27,7 +27,7 @@ namespace dsKnowledgeTest.Controllers
         public async Task<ObjectResult> Login(LoginUserViewModel loginUser)
         {
             var user = await _accountService.Login(loginUser);
-                if (user == null) return BadRequest("Пользователь не найден");
+            if (user == null) return BadRequest("Пользователь не найден");
             user.Token = await Authenticate(user);
             return Ok(user);
         }
@@ -36,11 +36,20 @@ namespace dsKnowledgeTest.Controllers
         [HttpPost]
         public async Task<ObjectResult> Register(RegisterUserViewModel registerUser)
         {
-            var user = await _accountService.Register(registerUser);
-            if (user == null) return BadRequest(user);
-            await _emailService.SendEmailAsync(user.Email, "Пароль для входа", DEFAULT_PASSWORD);
-            return Ok(user);
+            try
+            {
+                var passwordUser = await _passwordService.GeneratePassword();
+                var user = await _accountService.Register(registerUser, passwordUser.HashPassword);
+                if (user == null) return BadRequest("Данный email зарегистрирован.");
+                await _emailService.SendEmailAsync(user.Email, "Пароль для входа", passwordUser.Password);
+                return Ok(user);
+            }
+            catch
+            {
+                return BadRequest("Некорректный email.");
+            }
         }
+
         private Task<string> Authenticate(UserViewModel user)
         {
             var claims = new List<Claim>
@@ -54,7 +63,8 @@ namespace dsKnowledgeTest.Controllers
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
                 expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(1440)), // время действия 1440 минут(сутки)
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
+                    SecurityAlgorithms.HmacSha256));
 
             return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(jwt));
         }

@@ -80,8 +80,10 @@ public class QuestionService : IQuestionService
 
     public async Task CreateQuestionAsync(CreateQuestionViewModel question)
     {
-        question.TrueAnswers.RemoveAll(a => a == null);
-        question.Answers.RemoveAll(a => a == null);
+        for (int i = 0; i < question.TrueAnswers.Count; i++)
+            question.TrueAnswers[i] ??= "";
+        for (int i = 0; i < question.Answers.Count; i++)
+            question.Answers[i] ??= "";
         await _db.Questions.AddAsync(new Question
         {
             Name = question.Name,
@@ -105,6 +107,8 @@ public class QuestionService : IQuestionService
 
     public async Task EditQuestionAsync(EditQuestionViewModel question)
     {
+        question.TrueAnswers.RemoveAll(a => a == null);
+        question.Answers.RemoveAll(a => a == null);
         var questionVm = await _db.Questions.FirstOrDefaultAsync(q => q.Id.ToString() == question.Id);
         if (questionVm != null)
         {
@@ -152,6 +156,7 @@ public class QuestionService : IQuestionService
                 (l[j], l[i]) = (l[i], l[j]);
             }
         }
+
         return l;
     }
 
@@ -168,6 +173,7 @@ public class QuestionService : IQuestionService
                 (list[j], list[i]) = (list[i], list[j]);
             }
         }
+
         return list;
     }
 }
